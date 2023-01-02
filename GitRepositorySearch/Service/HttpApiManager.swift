@@ -24,14 +24,14 @@ struct HttpAPIManager {
         return headers
     }
     
-    static func callRequest<T, B, P>(api: String,
-                                     method: HTTPMethod,
-                                     param : P? = nil,
-                                     body: B? = nil,
-                                     responseClass:T.Type) -> Observable<T>
-    where T: Decodable, P: Encodable, B: Encodable {
+    static func callRequest<T>(api: String,
+                               method: HTTPMethod,
+                               param : Encodable? = nil,
+                               body: Encodable? = nil,
+                               responseClass:T.Type) -> Observable<T>
+    where T: Decodable {
         do {
-            let url = try self.makeURLWithQueryParams(url: api, param: param)
+            guard let url = try self.makeURLWithQueryParams(url: api, param: param) else { return Observable.error(ApiError.inValidUrl) }
             let urlRequest = try URLRequest(url: url, method: method, body: body, headers: headers)
             
             return self.callApi(request: urlRequest, responseClass: responseClass)
@@ -41,8 +41,9 @@ struct HttpAPIManager {
         }
     }
     
-    static func makeURLWithQueryParams(url: String, param: Encodable) throws -> URL {
+    static func makeURLWithQueryParams(url: String, param: Encodable?) throws -> URL? {
         var queryParams : [String : Any] = [:]
+        guard let param = param else { return nil }
         
         do {
             let paramData = try JSONEncoder().encode(param)
@@ -108,7 +109,7 @@ struct HttpAPIManager {
 
 
 extension URLRequest {
-    init<Body: Encodable> (url: URL, method: HTTPMethod, body: Body, headers: [String: String?]) throws {
+    init (url: URL, method: HTTPMethod, body: Encodable?, headers: [String: String?]) throws {
         self.init(url: url)
         self.timeoutInterval = TimeInterval(30)
         
@@ -144,9 +145,10 @@ extension URLRequest {
         }
     }
    
-    
-    func makeBody(body: Encodable) throws -> Data? {
+    func makeBody(body: Encodable?) throws -> Data? {
         var bodyParam: [String: Any] = [:]
+        guard let body = body else { return nil }
+        
         do {
             let bodyData = try JSONEncoder().encode(body)
             if let bodyObject = try JSONSerialization.jsonObject(with: bodyData, options: .allowFragments) as? [String: Any] {
