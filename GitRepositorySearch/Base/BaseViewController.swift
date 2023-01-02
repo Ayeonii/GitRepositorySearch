@@ -105,14 +105,13 @@ extension BaseViewControllerClass {
     func moveToTarget(to vc: UIViewController, using style: TransitionType, animated: Bool, completion: (() -> Void)? = nil) {
         let target = vc
         
-        if var baseVC = target as? Self {
+        if let baseVC = target as? Self {
             baseVC.transitionType = style
         }
         
         switch style {
         case .push:
             guard let nav = self.navigationController else { return }
-            target.hidesBottomBarWhenPushed = true
             nav.pushViewController(target, animated: animated, completion: completion)
             
         case .dimmPresent(let from, let dimmColor):
@@ -129,7 +128,6 @@ extension BaseViewControllerClass {
         case .presentNavigation:
             let navTarget = UINavigationController(rootViewController: target)
             navTarget.modalPresentationStyle = .overCurrentContext
-            navTarget.setNavigationBarHidden(true, animated: false)
             if let tabBarController = self.tabBarController {
                 tabBarController.present(navTarget, animated: animated, completion: completion)
             } else {

@@ -22,7 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let reactor = MainSearchReactor()
         let rootVC = Scene.mainSearchView(reactor).instantiate()
         let naviView = UINavigationController(rootViewController: rootVC)
-        naviView.setNavigationBarHidden(true, animated: false)
         
         window.rootViewController = naviView
         window.makeKeyAndVisible()
