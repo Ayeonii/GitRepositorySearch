@@ -34,7 +34,7 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
     }
 
     func bindAction(_ reactor: MainSearchReactor) {
-        searchController.searchBar.rx.text.orEmpty
+        searchController.searchBar.rx.text
             .debounce(RxTimeInterval.microseconds(200), scheduler: MainScheduler.instance)
             .map { text in MainSearchReactor.Action.filterRecentList(text) }
             .bind(to: reactor.action)

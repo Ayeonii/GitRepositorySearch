@@ -27,6 +27,7 @@
 		C4A0F6F829629CD100801CBE /* NSError+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6F729629CD000801CBE /* NSError+Extensions.swift */; };
 		C4A0F6FC2962B40500801CBE /* RecentSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6FB2962B40500801CBE /* RecentSearchTableViewCell.swift */; };
 		C4A0F6FE2962BDDE00801CBE /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6FD2962BDDE00801CBE /* SearchResultViewController.swift */; };
+		C4A0F7012962E20A00801CBE /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F7002962E20A00801CBE /* UserDefaultsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		C4A0F6F729629CD000801CBE /* NSError+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+Extensions.swift"; sourceTree = "<group>"; };
 		C4A0F6FB2962B40500801CBE /* RecentSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchTableViewCell.swift; sourceTree = "<group>"; };
 		C4A0F6FD2962BDDE00801CBE /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
+		C4A0F7002962E20A00801CBE /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		C5EDA8952408BD3246ED323D /* libPods-GitRepositorySearchTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GitRepositorySearchTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D402EBE1826CECB5D31D3FBC /* Pods-GitRepositorySearch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitRepositorySearch.release.xcconfig"; path = "Target Support Files/Pods-GitRepositorySearch/Pods-GitRepositorySearch.release.xcconfig"; sourceTree = "<group>"; };
 		EF827D8409EFA596F56017AC /* Pods-GitRepositorySearchTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitRepositorySearchTests.debug.xcconfig"; path = "Target Support Files/Pods-GitRepositorySearchTests/Pods-GitRepositorySearchTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -135,7 +137,7 @@
 				C4A0F6D029627A1700801CBE /* Service */,
 				C4A0F6D229627A2300801CBE /* Base */,
 				C4A0F6D129627A1E00801CBE /* Pages */,
-				C4A0F6DC29627BEE00801CBE /* Utils */,
+				C4A0F6DC29627BEE00801CBE /* Support */,
 				C4A0F6A0296273E800801CBE /* AppDelegate.swift */,
 				C4A0F6A2296273E800801CBE /* SceneDelegate.swift */,
 				C4A0F6A9296273EA00801CBE /* Assets.xcassets */,
@@ -180,14 +182,15 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
-		C4A0F6DC29627BEE00801CBE /* Utils */ = {
+		C4A0F6DC29627BEE00801CBE /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				C4A0F6FF2962E1F100801CBE /* UserDefaults */,
 				C4A0F6EF29627EB500801CBE /* Extensions */,
 				C4A0F6DF29627C3900801CBE /* PresentManager.swift */,
 				C4A0F6E129627D0700801CBE /* CustomLog.swift */,
 			);
-			path = Utils;
+			path = Support;
 			sourceTree = "<group>";
 		};
 		C4A0F6E529627D8200801CBE /* MainSearch */ = {
@@ -248,6 +251,14 @@
 				C4A0F6FB2962B40500801CBE /* RecentSearchTableViewCell.swift */,
 			);
 			path = TableViewCell;
+			sourceTree = "<group>";
+		};
+		C4A0F6FF2962E1F100801CBE /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				C4A0F7002962E20A00801CBE /* UserDefaultsManager.swift */,
+			);
+			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -405,6 +416,7 @@
 				C4A0F6DB29627BC700801CBE /* BaseViewController.swift in Sources */,
 				C4A0F6E429627D4E00801CBE /* Scene.swift in Sources */,
 				C4A0F6F129627EC300801CBE /* UINavigationController+Extensions.swift in Sources */,
+				C4A0F7012962E20A00801CBE /* UserDefaultsManager.swift in Sources */,
 				C4A0F6F829629CD100801CBE /* NSError+Extensions.swift in Sources */,
 				C4A0F6FE2962BDDE00801CBE /* SearchResultViewController.swift in Sources */,
 				C4A0F6F629629B6800801CBE /* ApiError.swift in Sources */,
