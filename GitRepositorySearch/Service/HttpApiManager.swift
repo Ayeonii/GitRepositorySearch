@@ -107,7 +107,6 @@ struct HttpAPIManager {
     }
 }
 
-
 extension URLRequest {
     init (url: URL, method: HTTPMethod, body: Encodable?, headers: [String: String?]) throws {
         self.init(url: url)
