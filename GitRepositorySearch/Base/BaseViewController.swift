@@ -54,7 +54,7 @@ class BaseViewControllerClass<T: Reactor>: UIViewController, ConfigureViewProtoc
     
     var transitionType: TransitionType?
     
-    var state: T.State? {
+    var state: T.State {
         return self.reactor.currentState
     }
     
