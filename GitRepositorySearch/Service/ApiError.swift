@@ -11,6 +11,8 @@ enum ApiError: Error {
     case decodingError(Error)
     case encodingError(Error)
     case inValidUrl
+    case imageFetchFail(String?)
+    case convertImageFail
     case server(Int, String?)
     case client(Int, String?)
 }
@@ -24,6 +26,10 @@ extension ApiError: LocalizedError {
             return "description: " + error.localizedDescription
         case .inValidUrl:
             return "description: Invalid URL"
+        case .imageFetchFail(let msg):
+            return "description: " + (msg ?? "")
+        case .convertImageFail:
+            return "description: Converting To Image Fail"
         case .server(_, let msg),
                 .client(_, let msg):
             return "description: " + (msg ?? "")
@@ -38,6 +44,10 @@ extension ApiError: LocalizedError {
             return "Check Encoding Type"
         case .inValidUrl:
             return "Check URL"
+        case .imageFetchFail:
+            return "Check Image URL"
+        case .convertImageFail:
+            return "Check Image Data"
         case .server,
                 .client:
             return "Retry"

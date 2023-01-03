@@ -8,14 +8,23 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
 
 class SearchDetailTableViewCell: UITableViewCell {
     static let identifier = "SearchDetailTableViewCell"
 
+    var disposeBag = DisposeBag()
+    
+    var imageTask: Disposable?
+    
+    let repoImage = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
+    }
+    
     var cellModel: SearchDetailCellModel? {
         didSet {
             guard let model = cellModel else { return }
-            
+            self.imageTask = repoImage.downloadImage(url: model.image)
         }
     }
     
@@ -30,6 +39,7 @@ class SearchDetailTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageTask?.dispose()
     }
     
     func configureLayout() {
