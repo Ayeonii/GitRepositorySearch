@@ -19,6 +19,7 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .systemPink
     }
     
     func bindAction(_ reactor: SearchDetailReactor) {

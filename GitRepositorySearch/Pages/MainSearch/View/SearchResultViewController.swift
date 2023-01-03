@@ -11,7 +11,7 @@ import Then
 
 class SearchResultViewController: UIViewController {
 
-    let tableView = UITableView().then {
+    let tableView = UITableView(frame: .zero, style: .grouped).then {
         $0.register(RecentSearchTableViewCell.self, forCellReuseIdentifier: RecentSearchTableViewCell.identifier)
     }
 
