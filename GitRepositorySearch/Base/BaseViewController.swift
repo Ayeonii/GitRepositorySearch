@@ -12,11 +12,9 @@ import ReactorKit
 //MARK: - TransitionType
 enum TransitionType {
     static let defaultDimmColor = UIColor.black.withAlphaComponent(0.6)
-    
-    case push(enableGesturePop: Bool = false)
     case dimmPresent(from: PresentationDirection = .bottom, dimmColor: UIColor = TransitionType.defaultDimmColor)
     case present
-    case presentNavigation(dimmColor: UIColor = TransitionType.defaultDimmColor)
+    case push
 }
 
 //MARK: - Bind Reactor Action And State
@@ -124,15 +122,7 @@ extension BaseViewControllerClass {
             
         case .present:
             self.present(target, animated: animated, completion: completion)
-            
-        case .presentNavigation:
-            let navTarget = UINavigationController(rootViewController: target)
-            navTarget.modalPresentationStyle = .overCurrentContext
-            if let tabBarController = self.tabBarController {
-                tabBarController.present(navTarget, animated: animated, completion: completion)
-            } else {
-                self.present(navTarget, animated: animated, completion: completion)
-            }
+       
         }
     }
 
@@ -209,7 +199,7 @@ extension BaseViewControllerClass {
         switch self.transitionType {
         case .push:
             self.navigationController?.popViewController(animated: animated, completion: completion)
-        case .present, .dimmPresent, .presentNavigation:
+        case .present, .dimmPresent:
             self.dismiss(animated: animated, completion: completion)
         default:
             if let nav = self.navigationController {

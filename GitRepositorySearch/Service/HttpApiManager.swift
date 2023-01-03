@@ -19,7 +19,7 @@ enum HTTPMethod {
 struct HttpAPIManager {
     static var headers: [String: String?] {
         let headers : [String: String?] = [
-            "Content-Type": "application/json"
+            "Content-Type": "application/vnd.github+json"
         ]
         return headers
     }

@@ -41,7 +41,6 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
             .disposed(by: disposeBag)
         
         searchController.searchBar.rx.searchButtonClicked
-            .debug()
             .compactMap { [weak self] in return self?.searchController.searchBar.text }
             .map { MainSearchReactor.Action.goToResult($0) }
             .bind(to: reactor.action)
@@ -54,8 +53,8 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
     }
     
     func bindState(_ reactor: MainSearchReactor) {
-        reactor.pulse(\.$recentList)
-            .bind(to: resultVC.tableView.rx.items(cellIdentifier: RecentSearchTableViewCell.identifier, cellType: RecentSearchTableViewCell.self)) { [weak self] index, item, cell in
+        reactor.pulse(\.$filteredList)
+            .bind(to: resultVC.tableView.rx.items(cellIdentifier: RecentSearchTableViewCell.identifier, cellType: RecentSearchTableViewCell.self)) { index, item, cell in
                 cell.titleLabel.text = item
             }
             .disposed(by: disposeBag)
@@ -64,7 +63,7 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
             .compactMap{ $0.moveToDetailText }
             .asDriver{ _ in .never() }
             .drive(onNext: { [weak self] text in
-                log.debug("selected text", text)
+                self?.moveToSearchDetail(text: text)
             })
             .disposed(by: disposeBag)
     }
@@ -80,8 +79,10 @@ extension MainSearchViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
     }
+    
+    func moveToSearchDetail(text: String) {
+        let reactor = SearchDetailReactor(searchText: text)
+        self.transition(to: .searchDetailView(reactor), using: .push, animated: true)
+    }
 }
 
-extension MainSearchViewController: UITableViewDelegate {
-    
-}
