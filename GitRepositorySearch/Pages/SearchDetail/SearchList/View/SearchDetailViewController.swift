@@ -59,7 +59,14 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
             .filter{ $0.shouldReload }
             .asDriver{ _ in .never() }
             .drive(onNext: {[weak self] _ in
-                self?.tableView.reloadData()
+                guard let self = self else { return }
+                UIView.transition(with: self.tableView,
+                              duration: 0.2,
+                              options: .transitionCrossDissolve,
+                              animations: { self.tableView.reloadData()})
+                
+                guard self.tableView.numberOfRows(inSection: 0) > 0 else { return }
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
             })
             .disposed(by: disposeBag)
         
@@ -102,12 +109,12 @@ extension SearchDetailViewController {
     func showMenuAction() {
         let alertController = UIAlertController(title: "Search options", message: nil, preferredStyle: .actionSheet)
         
-        let sortAction = UIAlertAction(title: "Sort", style: .default) { _ in
-            
+        let sortAction = UIAlertAction(title: SearchOptionsType.sort.rawValue, style: .default) { _ in
+            self.showOptionPage(optionType: .sort)
         }
         
-        let orderAction = UIAlertAction(title: "Order", style: .default) { _ in
-            
+        let orderAction = UIAlertAction(title: SearchOptionsType.order.rawValue, style: .default) { _ in
+            self.showOptionPage(optionType: .order)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -119,12 +126,21 @@ extension SearchDetailViewController {
         self.present(alertController, animated: true)
     }
     
-    func showSortPage() {
+    func showOptionPage(optionType: SearchOptionsType) {
+        let optionReactor = SearchOptionsReactor(viewType: optionType)
+        self.transition(to: .searchOptionsView(optionReactor), using: .naviPresent, animated: true)
         
-    }
-    
-    func showOrderPage() {
+        optionReactor.state
+            .compactMap{ $0.selectedSortOption }
+            .map{ option in SearchDetailReactor.Action.sortOption(option)}
+            .bind(to: reactor.action)
+            .disposed(by: optionReactor.disposeBag)
         
+        optionReactor.state
+            .compactMap{ $0.selectedOrderOption }
+            .map{ option in SearchDetailReactor.Action.orderOption(option)}
+            .bind(to: reactor.action)
+            .disposed(by: optionReactor.disposeBag)
     }
 }
 

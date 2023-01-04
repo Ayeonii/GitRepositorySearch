@@ -11,6 +11,7 @@ import UIKit
 enum Scene {
     case mainSearchView(MainSearchReactor)
     case searchDetailView(SearchDetailReactor)
+    case searchOptionsView(SearchOptionsReactor)
 }
 
 extension Scene {
@@ -24,6 +25,13 @@ extension Scene {
             
         case .searchDetailView(let reactor):
             let vc = SearchDetailViewController(reactor: reactor)
+            vc.bind(reactor: reactor)
+            
+            return vc
+            
+        case .searchOptionsView(let reactor):
+            let vc = SearchOptionsViewController(reactor: reactor)
+            vc.modalPresentationStyle = .popover
             vc.bind(reactor: reactor)
             
             return vc

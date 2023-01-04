@@ -7,16 +7,17 @@
 
 import Foundation
 
-enum SearchRepositorySortType: String {
+enum SearchRepositorySortType: String, CaseIterable {
+    case `default` = "default"
     case stars = "stars"
     case forks = "forks"
     case helpIssues = "help-wanted-issues"
     case updated = "updated"
 }
 
-enum SearchRepositoryOrderType: String {
-    case asc = "asc"
+enum SearchRepositoryOrderType: String, CaseIterable {
     case desc = "desc"
+    case asc = "asc"
 }
 
 struct SearchRepositoryParams: Codable {

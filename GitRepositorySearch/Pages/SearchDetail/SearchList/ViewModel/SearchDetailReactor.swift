@@ -19,6 +19,8 @@ class SearchDetailReactor: Reactor {
     enum Action {
         case fetchRepository
         case showMenu
+        case sortOption(SearchRepositorySortType)
+        case orderOption(SearchRepositoryOrderType)
     }
     
     enum Mutation {
@@ -28,6 +30,7 @@ class SearchDetailReactor: Reactor {
         case setReload(Bool)
         case setEndPage(Bool)
         case setShowMenu(Bool)
+        case setSortOption(SearchRepositorySortType)
     }
     
     struct State {
@@ -38,6 +41,7 @@ class SearchDetailReactor: Reactor {
         var shouldReload: Bool = false
         var endPaging: Bool = false
         var shouldShowMenu: Bool = false
+        var sortingOption: SearchRepositorySortType = .default
     }
     
     let initialState: State
@@ -57,6 +61,23 @@ class SearchDetailReactor: Reactor {
             
         case .showMenu:
             return showMenuAction()
+            
+        case .sortOption(let option):
+            resetPage()
+            return .concat([
+                .just(.setFetching(true)),
+                .just(.setSortOption(option)),
+                fetchRepositories(text: currentState.searchText, sort: option),
+                .just(.setFetching(false))
+            ])
+            
+        case .orderOption(let option):
+            resetPage()
+            return .concat([
+                .just(.setFetching(true)),
+                fetchRepositories(text: currentState.searchText, sort: currentState.sortingOption, order: option),
+                .just(.setFetching(false))
+            ])
         }
     }
     
@@ -81,6 +102,9 @@ class SearchDetailReactor: Reactor {
             
         case .setShowMenu(let shouldShow):
             newState.shouldShowMenu = shouldShow
+            
+        case .setSortOption(let sortOption):
+            newState.sortingOption = sortOption
         }
         
         return newState
@@ -102,11 +126,9 @@ extension SearchDetailReactor {
                   res.incompleteResults == false else { return .empty() }
             
             self.totalRepositoryCount = res.totalCount ?? 0
-            
-            let lastRepos = self.currentState.repositories ?? []
             let newRepos = SearchDetailModel(from: repos).repositories
             
-            return self.setRepositoryByPaging(lastRepos: lastRepos, newRepos: newRepos)
+            return self.setRepositoryByPaging(newRepos: newRepos)
         }
         .catch {
             log.error($0)
@@ -114,30 +136,38 @@ extension SearchDetailReactor {
         }
     }
     
-    private func setRepositoryByPaging(lastRepos: [SearchDetailCellModel], newRepos: [SearchDetailCellModel]) -> Observable<Mutation> {
+    private func setRepositoryByPaging(newRepos: [SearchDetailCellModel]) -> Observable<Mutation> {
         let isLast = self.isLastPage
         let isPaging = self.page > 1
-        self.page += 1
+        self.addPage()
         
         if isPaging {
+            let lastRepos = self.currentState.repositories ?? []
             let lastRepoCount = lastRepos.count
             let pagingRepos = Array(lastRepoCount..<(lastRepoCount + newRepos.count))
             return .concat([
                 .just(.setEndPage(isLast)),
-                .just(.setPagingRepoIndex(pagingRepos)),
-                .just(.setRepositories(lastRepos + newRepos))
+                .just(.setRepositories(lastRepos + newRepos)),
+                .just(.setPagingRepoIndex(pagingRepos))
             ])
         }
         
         return .concat([
             .just(.setEndPage(isLast)),
-            .just(.setRepositories(lastRepos + newRepos)),
+            .just(.setRepositories(newRepos)),
             self.reloadAll()
         ])
     }
 }
 
 extension SearchDetailReactor {
+    func resetPage() {
+        self.page = 1
+    }
+    
+    func addPage() {
+        self.page += 1
+    }
     
     func reloadAll() -> Observable<Mutation> {
         return .concat([

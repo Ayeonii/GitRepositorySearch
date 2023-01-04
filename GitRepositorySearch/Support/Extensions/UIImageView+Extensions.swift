@@ -19,9 +19,9 @@ extension UIImageView {
             .subscribe(onNext: {[weak self] image in
                 self?.image = image
             }, onCompleted: {
-                log.debug("completed")
+                //log.debug("completed")
             }, onDisposed: {
-                log.debug("disposed")
+                //log.debug("disposed")
             })
     }
 }

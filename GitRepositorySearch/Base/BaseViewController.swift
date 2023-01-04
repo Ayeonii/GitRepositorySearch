@@ -15,6 +15,7 @@ enum TransitionType {
     case dimmPresent(from: PresentationDirection = .bottom, dimmColor: UIColor = TransitionType.defaultDimmColor)
     case present
     case push
+    case naviPresent
 }
 
 //MARK: - Bind Reactor Action And State
@@ -32,6 +33,10 @@ extension BindReactorActionStateProtocol {
     }
 }
 
+//MARK: - View Transition
+protocol BaseTransitionProtocol {
+    var transitionType : TransitionType? {get set}
+}
 
 //MARK: - View Protocol
 protocol ConfigureViewProtocol {
@@ -39,11 +44,11 @@ protocol ConfigureViewProtocol {
     func configureLayer()
 }
 
-
 // MARK: - SuperClass of Common ViewControllers
 typealias BaseViewController<T: Reactor> = BaseViewControllerClass<T> & BindReactorActionStateProtocol
 
-class BaseViewControllerClass<T: Reactor>: UIViewController, ConfigureViewProtocol {
+class BaseViewControllerClass<T: Reactor>: UIViewController, BaseTransitionProtocol, ConfigureViewProtocol {
+
     typealias ReactorType = T
     
     lazy var dimmTransitionDelegate = DimmPresentManager()
@@ -103,7 +108,7 @@ extension BaseViewControllerClass {
     func moveToTarget(to vc: UIViewController, using style: TransitionType, animated: Bool, completion: (() -> Void)? = nil) {
         let target = vc
         
-        if let baseVC = target as? Self {
+        if var baseVC = target as? BaseTransitionProtocol {
             baseVC.transitionType = style
         }
         
@@ -123,83 +128,18 @@ extension BaseViewControllerClass {
         case .present:
             self.present(target, animated: animated, completion: completion)
        
+        case .naviPresent:
+            let navTarget = UINavigationController(rootViewController: target)
+            self.present(navTarget, animated: animated, completion: completion)
         }
     }
 
-    ///Close ViewController And Move To ViewController
-    func transitionAfterClose(to vc: UIViewController, using style: TransitionType, animated: Bool, completion: (() -> Void)? = nil) {
-        
-        if let rootNav = self.navigationController {
-            self.close(animated: true) {
-                let prevVC = rootNav.topViewController as? Self
-                prevVC?.transition(to: vc, using: style, animated: animated, completion: completion)
-            }
-        } else {
-            if let presentingVC = self.presentingViewController {
-                if let pvc = presentingVC as? Self {
-                    self.close(animated: true) {
-                        pvc.transition(to: vc, using: style, animated: animated, completion: completion)
-                    }
-                } else {
-                    var prevNavigation: UINavigationController?
-                    if let prevNav = presentingVC as? UINavigationController {
-                        prevNavigation = prevNav
-                    } else if let prevTabBar = presentingVC as? UITabBarController {
-                        prevNavigation = prevTabBar.viewControllers?[prevTabBar.selectedIndex] as? UINavigationController
-                    }
-                    
-                    if let prevNav = prevNavigation?.topViewController,
-                       let prevVC = prevNav as? Self {
-                        self.close(animated: true) {
-                            prevVC.transition(to: vc, using: style, animated: animated, completion: completion)
-                        }
-                    }
-                    
-                }
-            }
-        }
-    }
-    
-    ///Close ViewController And Move To Scene
-    func transitionAfterClose(to scene: Scene, using style: TransitionType, animated: Bool, completion: (() -> Void)? = nil) {
-        let vc = scene.instantiate()
-        
-        if let rootNav = self.navigationController {
-            self.close(animated: true) {
-                let prevVC = rootNav.topViewController as? Self
-                prevVC?.transition(to: vc, using: style, animated: animated, completion: completion)
-            }
-        } else {
-            if let presentingVC = self.presentingViewController {
-                if let pvc = presentingVC as? Self {
-                    self.close(animated: true) {
-                        pvc.transition(to: vc, using: style, animated: animated, completion: completion)
-                    }
-                } else {
-                    var prevNavigation: UINavigationController?
-                    if let prevNav = presentingVC as? UINavigationController {
-                        prevNavigation = prevNav
-                    } else if let prevTabBar = presentingVC as? UITabBarController {
-                        prevNavigation = prevTabBar.viewControllers?[prevTabBar.selectedIndex] as? UINavigationController
-                    }
-                    
-                    if let prevNav = prevNavigation?.topViewController,
-                       let prevVC = prevNav as? Self {
-                        self.close(animated: true) {
-                            prevVC.transition(to: vc, using: style, animated: animated, completion: completion)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
     ///Close ViewController By TransitionType Type
     func close(animated: Bool, completion: (() -> Void)? = nil) {
         switch self.transitionType {
         case .push:
             self.navigationController?.popViewController(animated: animated, completion: completion)
-        case .present, .dimmPresent:
+        case .present, .dimmPresent, .naviPresent:
             self.dismiss(animated: animated, completion: completion)
         default:
             if let nav = self.navigationController {

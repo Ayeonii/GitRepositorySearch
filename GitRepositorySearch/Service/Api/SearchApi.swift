@@ -26,8 +26,9 @@ extension SearchApi {
     static func fetchRepositoryWithText(text: String, sort: SearchRepositorySortType?, order: SearchRepositoryOrderType?, perPage: Int, page: Int) -> Observable<SearchRepositoryCodable> {
         
         let apiUrl = EndPoint.repositories.url
-        
-        let params = SearchRepositoryParams(q: text, sort: sort?.rawValue, order: order?.rawValue, perPage: perPage, page: page)
+        var sortOption = sort == .default ? nil : sort
+    
+        let params = SearchRepositoryParams(q: text, sort: sortOption?.rawValue, order: order?.rawValue, perPage: perPage, page: page)
         
         return HttpAPIManager.callRequest(api: apiUrl,
                                           method: .get,

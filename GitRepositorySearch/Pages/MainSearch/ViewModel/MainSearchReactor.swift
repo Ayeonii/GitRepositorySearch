@@ -85,7 +85,10 @@ extension MainSearchReactor {
         currentSavedRecentList.insert(text, at: 0)
         UserDefaultsManager.recentSearchList = currentSavedRecentList
         
-        let currentFilterList = [text] + currentState.filteredList
+        var currentFilterList =  currentState.filteredList
+        currentFilterList.removeAll(where: { $0 == text })
+        currentFilterList.insert(text, at: 0)
+        
         return .merge(.just(.setFilteredList(currentFilterList)), .just(.setRecentList(currentSavedRecentList)))
     }
     
