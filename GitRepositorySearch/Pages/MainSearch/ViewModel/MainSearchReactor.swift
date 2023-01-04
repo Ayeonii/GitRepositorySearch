@@ -14,6 +14,7 @@ class MainSearchReactor: Reactor {
         case goToResult(String?)
         case deleteRecent(String)
         case clearRecentList
+        case saveRecentText(String)
     }
     
     enum Mutation {
@@ -45,17 +46,16 @@ class MainSearchReactor: Reactor {
             return filterRecentList(text: text)
             
         case .goToResult(let text):
-            return .concat([
-                .just(.setMoveToDetail(text)),
-                .just(.setMoveToDetail(nil)),
-                saveRecent(text: text)
-            ])
+            return goToResult(text: text)
             
         case .clearRecentList:
             return clearAllRecent()
             
         case .deleteRecent(let text):
             return deleteRecentItem(text: text)
+            
+        case .saveRecentText(let text):
+            return saveRecent(text: text)
         }
     }
     
@@ -116,6 +116,13 @@ extension MainSearchReactor {
         currentFilterList.removeAll(where: { $0 == text })
         
         return .merge(.just(.setFilteredList(currentFilterList)), .just(.setRecentList(currentSavedRecentList)))
+    }
+    
+    func goToResult(text: String?) -> Observable<Mutation> {
+        return .concat([
+            .just(.setMoveToDetail(text)),
+            .just(.setMoveToDetail(nil))
+        ])
     }
 }
 

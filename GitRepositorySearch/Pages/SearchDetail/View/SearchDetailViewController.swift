@@ -12,17 +12,21 @@ import SnapKit
 import Then
 
 class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
-    
-    lazy var tableView = UITableView().then {
-        $0.backgroundColor = .systemPink
+
+    lazy var tableView = UITableView(frame: .zero, style: .grouped).then {
+        $0.delegate = self
         $0.dataSource = self
         $0.register(SearchDetailTableViewCell.self, forCellReuseIdentifier: SearchDetailTableViewCell.identifier)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .systemPink
         self.reactor.action.onNext(.fetchRepository)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNavigationBar()
     }
     
     override func configureLayout() {
@@ -70,15 +74,54 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
     }
 }
 
+extension SearchDetailViewController {
+    func setNavigationBar() {
+        navigationItem.title = "Repositories"
+        navigationController?.navigationBar.prefersLargeTitles = false
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis.circle"),
+            style: .plain,
+            target: self,
+            action: nil
+        )
+    }
+}
+
+extension SearchDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView()
+        let label = UILabel().then {
+            $0.textAlignment = .center
+            $0.font = .systemFont(ofSize: 16)
+            $0.textColor = .systemGray
+            $0.text = "검색결과가 없습니다."
+        }
+        
+        header.addSubview(label)
+        label.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard let repos = state.repositories, repos.isEmpty else { return 0 }
+        return 60
+    }
+}
+
 extension SearchDetailViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return state.repositories.count
+        return state.repositories?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchDetailTableViewCell.identifier, for: indexPath) as? SearchDetailTableViewCell else { return UITableViewCell() }
         
-        cell.cellModel = state.repositories[indexPath.row]
+        cell.cellModel = state.repositories?[indexPath.row]
         return cell
     }
 }

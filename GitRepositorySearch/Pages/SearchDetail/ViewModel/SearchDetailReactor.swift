@@ -30,7 +30,7 @@ class SearchDetailReactor: Reactor {
     
     struct State {
         let searchText: String
-        var repositories: [SearchDetailCellModel] = []
+        var repositories: [SearchDetailCellModel]?
         @Pulse var pagingRows: [Int] = []
         var isFetching: Bool = false
         var shouldReload: Bool = false
@@ -94,7 +94,7 @@ extension SearchDetailReactor {
             
             self.totalRepositoryCount = res.totalCount ?? 0
             
-            let lastRepos = self.currentState.repositories
+            let lastRepos = self.currentState.repositories ?? []
             let newRepos = SearchDetailModel(from: repos).repositories
             
             return self.setRepositoryByPaging(lastRepos: lastRepos, newRepos: newRepos)

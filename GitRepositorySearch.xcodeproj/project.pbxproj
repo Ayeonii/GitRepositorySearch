@@ -129,6 +129,23 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		C49DADC42965418A00C49B85 /* SupportPage */ = {
+			isa = PBXGroup;
+			children = (
+				C49DADC5296541A000C49B85 /* SearchResultView */,
+			);
+			path = SupportPage;
+			sourceTree = "<group>";
+		};
+		C49DADC5296541A000C49B85 /* SearchResultView */ = {
+			isa = PBXGroup;
+			children = (
+				C4A0F6FD2962BDDE00801CBE /* SearchResultViewController.swift */,
+				C4A0F6FA2962B3E400801CBE /* TableViewCell */,
+			);
+			path = SearchResultView;
+			sourceTree = "<group>";
+		};
 		C4A0F694296273E800801CBE = {
 			isa = PBXGroup;
 			children = (
@@ -186,6 +203,7 @@
 		C4A0F6D129627A1E00801CBE /* Pages */ = {
 			isa = PBXGroup;
 			children = (
+				C49DADC42965418A00C49B85 /* SupportPage */,
 				C4A0F6E529627D8200801CBE /* MainSearch */,
 				C4BAAD222963C1DD00D40016 /* SearchDetail */,
 			);
@@ -227,8 +245,6 @@
 			isa = PBXGroup;
 			children = (
 				C4A0F6E929627DA600801CBE /* MainSearchViewController.swift */,
-				C4A0F6FD2962BDDE00801CBE /* SearchResultViewController.swift */,
-				C4A0F6FA2962B3E400801CBE /* TableViewCell */,
 			);
 			path = View;
 			sourceTree = "<group>";

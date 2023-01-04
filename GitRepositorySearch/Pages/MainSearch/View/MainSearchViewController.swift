@@ -27,12 +27,11 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
     override func viewDidLoad() {
         super.viewDidLoad()
         resultVC.tableView.delegate = self
-        setupNavigation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        setupNavigation()
     }
 
     func bindAction(_ reactor: MainSearchReactor) {
@@ -43,7 +42,7 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
             .disposed(by: disposeBag)
         
         searchController.searchBar.rx.searchButtonClicked
-            .compactMap { [weak self] in return self?.searchController.searchBar.text }
+            .compactMap { [weak self] in self?.searchController.searchBar.text }
             .map { MainSearchReactor.Action.goToResult($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -51,26 +50,19 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
     
     func bindState(_ reactor: MainSearchReactor) {
         reactor.pulse(\.$filteredList)
-            .bind(to: resultVC.tableView.rx.items(cellIdentifier: RecentSearchTableViewCell.identifier, cellType: RecentSearchTableViewCell.self)) {[weak self] index, item, cell in
-                guard let self = self else { return }
+            .bind(to: resultVC.tableView.rx.items(cellIdentifier: RecentSearchTableViewCell.identifier, cellType: RecentSearchTableViewCell.self)) { index, item, cell in
 
                 cell.titleLabel.text = item
               
                 cell.coverView.rx.tapGesture()
                     .when(.recognized)
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] _ in
-                        let clickedText = cell.titleLabel.text ?? ""
-                        self?.reactor.action.onNext(.goToResult(clickedText))
-                    })
+                    .map { _ in MainSearchReactor.Action.goToResult(cell.titleLabel.text ?? "") }
+                    .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
-                
+                                
                 cell.deleteBtn.rx.tap
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] in
-                        let text = cell.titleLabel.text ?? ""
-                        self?.reactor.action.onNext(.deleteRecent(text))
-                    })
+                    .map { MainSearchReactor.Action.deleteRecent(cell.titleLabel.text ?? "") }
+                    .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
             }
             .disposed(by: disposeBag)
@@ -83,22 +75,21 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
             })
             .disposed(by: disposeBag)
     }
-    
-    override func configureLayout() {
-        
-    }
 }
 
 extension MainSearchViewController {
     func setupNavigation() {
         navigationItem.title = "GitHub"
         navigationItem.hidesSearchBarWhenScrolling = false
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = searchController
     }
     
     func moveToSearchDetail(text: String) {
         let reactor = SearchDetailReactor(searchText: text)
-        self.transition(to: .searchDetailView(reactor), using: .push, animated: true)
+        self.transition(to: .searchDetailView(reactor), using: .push, animated: true) {
+            self.reactor.action.onNext(.saveRecentText(text))
+        }
     }
 }
 
@@ -134,12 +125,10 @@ extension MainSearchViewController: UITableViewDelegate {
         }
         
         clearBtn.rx.tap
-            .asDriver()
-            .drive(onNext: { [weak self] in
-                self?.reactor.action.onNext(.clearRecentList)
-            })
+            .map { MainSearchReactor.Action.clearRecentList }
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
+           
         return header
     }
     
