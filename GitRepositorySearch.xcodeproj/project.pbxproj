@@ -26,8 +26,8 @@
 		C4A0F6F42962800400801CBE /* HttpApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6F32962800400801CBE /* HttpApiManager.swift */; };
 		C4A0F6F629629B6800801CBE /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6F529629B6800801CBE /* ApiError.swift */; };
 		C4A0F6F829629CD100801CBE /* NSError+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6F729629CD000801CBE /* NSError+Extensions.swift */; };
-		C4A0F6FC2962B40500801CBE /* RecentSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6FB2962B40500801CBE /* RecentSearchTableViewCell.swift */; };
-		C4A0F6FE2962BDDE00801CBE /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6FD2962BDDE00801CBE /* SearchResultViewController.swift */; };
+		C4A0F6FC2962B40500801CBE /* SearchFilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6FB2962B40500801CBE /* SearchFilterTableViewCell.swift */; };
+		C4A0F6FE2962BDDE00801CBE /* SearchFilterResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6FD2962BDDE00801CBE /* SearchFilterResultViewController.swift */; };
 		C4A0F7012962E20A00801CBE /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F7002962E20A00801CBE /* UserDefaultsManager.swift */; };
 		C4BAAD1F2963B95E00D40016 /* SearchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BAAD1E2963B95E00D40016 /* SearchApi.swift */; };
 		C4BAAD212963B9EA00D40016 /* SearchApiServiceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BAAD202963B9EA00D40016 /* SearchApiServiceModel.swift */; };
@@ -73,8 +73,8 @@
 		C4A0F6F32962800400801CBE /* HttpApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpApiManager.swift; sourceTree = "<group>"; };
 		C4A0F6F529629B6800801CBE /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		C4A0F6F729629CD000801CBE /* NSError+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+Extensions.swift"; sourceTree = "<group>"; };
-		C4A0F6FB2962B40500801CBE /* RecentSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchTableViewCell.swift; sourceTree = "<group>"; };
-		C4A0F6FD2962BDDE00801CBE /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
+		C4A0F6FB2962B40500801CBE /* SearchFilterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterTableViewCell.swift; sourceTree = "<group>"; };
+		C4A0F6FD2962BDDE00801CBE /* SearchFilterResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterResultViewController.swift; sourceTree = "<group>"; };
 		C4A0F7002962E20A00801CBE /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		C4BAAD1E2963B95E00D40016 /* SearchApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchApi.swift; sourceTree = "<group>"; };
 		C4BAAD202963B9EA00D40016 /* SearchApiServiceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchApiServiceModel.swift; sourceTree = "<group>"; };
@@ -132,18 +132,18 @@
 		C49DADC42965418A00C49B85 /* SupportPage */ = {
 			isa = PBXGroup;
 			children = (
-				C49DADC5296541A000C49B85 /* SearchResultView */,
+				C49DADC5296541A000C49B85 /* SearchFilterResultView */,
 			);
 			path = SupportPage;
 			sourceTree = "<group>";
 		};
-		C49DADC5296541A000C49B85 /* SearchResultView */ = {
+		C49DADC5296541A000C49B85 /* SearchFilterResultView */ = {
 			isa = PBXGroup;
 			children = (
-				C4A0F6FD2962BDDE00801CBE /* SearchResultViewController.swift */,
+				C4A0F6FD2962BDDE00801CBE /* SearchFilterResultViewController.swift */,
 				C4A0F6FA2962B3E400801CBE /* TableViewCell */,
 			);
-			path = SearchResultView;
+			path = SearchFilterResultView;
 			sourceTree = "<group>";
 		};
 		C4A0F694296273E800801CBE = {
@@ -288,7 +288,7 @@
 		C4A0F6FA2962B3E400801CBE /* TableViewCell */ = {
 			isa = PBXGroup;
 			children = (
-				C4A0F6FB2962B40500801CBE /* RecentSearchTableViewCell.swift */,
+				C4A0F6FB2962B40500801CBE /* SearchFilterTableViewCell.swift */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -493,7 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4A0F6FC2962B40500801CBE /* RecentSearchTableViewCell.swift in Sources */,
+				C4A0F6FC2962B40500801CBE /* SearchFilterTableViewCell.swift in Sources */,
 				C4A0F6E229627D0700801CBE /* CustomLog.swift in Sources */,
 				C4A0F6F42962800400801CBE /* HttpApiManager.swift in Sources */,
 				C4A0F6DB29627BC700801CBE /* BaseViewController.swift in Sources */,
@@ -506,7 +506,7 @@
 				C4A0F7012962E20A00801CBE /* UserDefaultsManager.swift in Sources */,
 				C4A0F6F829629CD100801CBE /* NSError+Extensions.swift in Sources */,
 				C4BAAD292963C25300D40016 /* SearchDetailReactor.swift in Sources */,
-				C4A0F6FE2962BDDE00801CBE /* SearchResultViewController.swift in Sources */,
+				C4A0F6FE2962BDDE00801CBE /* SearchFilterResultViewController.swift in Sources */,
 				C4A0F6F629629B6800801CBE /* ApiError.swift in Sources */,
 				C4A0F6EE29627DBC00801CBE /* MainSearchModel.swift in Sources */,
 				C4BAAD2E2963C3CF00D40016 /* SearchDetailModel.swift in Sources */,

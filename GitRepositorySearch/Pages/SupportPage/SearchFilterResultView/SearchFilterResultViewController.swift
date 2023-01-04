@@ -9,10 +9,10 @@ import UIKit
 import SnapKit
 import Then
 
-class SearchResultViewController: UIViewController {
+class SearchFilterResultViewController: UIViewController {
 
     let tableView = UITableView(frame: .zero, style: .grouped).then {
-        $0.register(RecentSearchTableViewCell.self, forCellReuseIdentifier: RecentSearchTableViewCell.identifier)
+        $0.register(SearchFilterTableViewCell.self, forCellReuseIdentifier: SearchFilterTableViewCell.identifier)
     }
 
     override func viewDidLoad() {

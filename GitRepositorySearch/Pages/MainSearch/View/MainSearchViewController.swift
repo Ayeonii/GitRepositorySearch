@@ -14,7 +14,7 @@ import RxGesture
 import Then
 
 class MainSearchViewController: BaseViewController<MainSearchReactor> {
-    private var resultVC = SearchResultViewController()
+    private var resultVC = SearchFilterResultViewController()
     
     lazy var searchController = UISearchController(searchResultsController: resultVC).then {
         $0.searchBar.placeholder = "Search Repositories"
@@ -50,7 +50,7 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
     
     func bindState(_ reactor: MainSearchReactor) {
         reactor.pulse(\.$filteredList)
-            .bind(to: resultVC.tableView.rx.items(cellIdentifier: RecentSearchTableViewCell.identifier, cellType: RecentSearchTableViewCell.self)) { index, item, cell in
+            .bind(to: resultVC.tableView.rx.items(cellIdentifier: SearchFilterTableViewCell.identifier, cellType: SearchFilterTableViewCell.self)) { index, item, cell in
 
                 cell.titleLabel.text = item
               

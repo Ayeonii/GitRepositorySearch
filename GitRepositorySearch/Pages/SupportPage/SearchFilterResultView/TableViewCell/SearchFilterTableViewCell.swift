@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-class RecentSearchTableViewCell: UITableViewCell {
+class SearchFilterTableViewCell: UITableViewCell {
     static let identifier = "RecentSearchTableViewCell"
     
     var disposeBag = DisposeBag()
@@ -34,7 +34,6 @@ class RecentSearchTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = .systemGray6
         self.selectionStyle = .none
         configureLayout()
     }
