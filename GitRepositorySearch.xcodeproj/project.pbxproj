@@ -146,6 +146,23 @@
 			path = SearchFilterResultView;
 			sourceTree = "<group>";
 		};
+		C49DADC6296548F800C49B85 /* SearchList */ = {
+			isa = PBXGroup;
+			children = (
+				C4BAAD252963C1FB00D40016 /* Model */,
+				C4BAAD242963C1F700D40016 /* ViewModel */,
+				C4BAAD232963C1F200D40016 /* View */,
+			);
+			path = SearchList;
+			sourceTree = "<group>";
+		};
+		C49DADC7296548FE00C49B85 /* SearchOptions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SearchOptions;
+			sourceTree = "<group>";
+		};
 		C4A0F694296273E800801CBE = {
 			isa = PBXGroup;
 			children = (
@@ -304,9 +321,8 @@
 		C4BAAD222963C1DD00D40016 /* SearchDetail */ = {
 			isa = PBXGroup;
 			children = (
-				C4BAAD252963C1FB00D40016 /* Model */,
-				C4BAAD242963C1F700D40016 /* ViewModel */,
-				C4BAAD232963C1F200D40016 /* View */,
+				C49DADC6296548F800C49B85 /* SearchList */,
+				C49DADC7296548FE00C49B85 /* SearchOptions */,
 			);
 			path = SearchDetail;
 			sourceTree = "<group>";

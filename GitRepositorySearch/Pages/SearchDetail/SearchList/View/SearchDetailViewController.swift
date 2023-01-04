@@ -57,15 +57,23 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
     func bindState(_ reactor: SearchDetailReactor) {
         reactor.state
             .filter{ $0.shouldReload }
-            .observe(on: MainScheduler.instance)
-            .bind(onNext: {[weak self] _ in
+            .asDriver{ _ in .never() }
+            .drive(onNext: {[weak self] _ in
                 self?.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .filter{ $0.shouldShowMenu }
+            .asDriver{ _ in .never() }
+            .drive(onNext: {[weak self] _ in
+                self?.showMenuAction()
             })
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$pagingRows)
             .filter{ !$0.isEmpty }
-            .asDriver { _ in .never() }
+            .asDriver{ _ in .never() }
             .drive(onNext: { [weak self] rows in
                 let insertIndexPaths: [IndexPath] = rows.map {IndexPath(row: $0, section: 0)}
                 self?.tableView.insertRows(at: insertIndexPaths, with: .fade)
@@ -83,8 +91,40 @@ extension SearchDetailViewController {
             image: UIImage(systemName: "ellipsis.circle"),
             style: .plain,
             target: self,
-            action: nil
+            action: #selector(menuAction)
         )
+    }
+    
+    @objc private func menuAction() {
+        reactor.action.onNext(.showMenu)
+    }
+    
+    func showMenuAction() {
+        let alertController = UIAlertController(title: "Search options", message: nil, preferredStyle: .actionSheet)
+        
+        let sortAction = UIAlertAction(title: "Sort", style: .default) { _ in
+            
+        }
+        
+        let orderAction = UIAlertAction(title: "Order", style: .default) { _ in
+            
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alertController.addAction(sortAction)
+        alertController.addAction(orderAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true)
+    }
+    
+    func showSortPage() {
+        
+    }
+    
+    func showOrderPage() {
+        
     }
 }
 
@@ -102,7 +142,6 @@ extension SearchDetailViewController: UITableViewDelegate {
         label.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
         }
-        
         return header
     }
     

@@ -18,6 +18,7 @@ class SearchDetailReactor: Reactor {
     
     enum Action {
         case fetchRepository
+        case showMenu
     }
     
     enum Mutation {
@@ -26,6 +27,7 @@ class SearchDetailReactor: Reactor {
         case setFetching(Bool)
         case setReload(Bool)
         case setEndPage(Bool)
+        case setShowMenu(Bool)
     }
     
     struct State {
@@ -35,6 +37,7 @@ class SearchDetailReactor: Reactor {
         var isFetching: Bool = false
         var shouldReload: Bool = false
         var endPaging: Bool = false
+        var shouldShowMenu: Bool = false
     }
     
     let initialState: State
@@ -51,6 +54,9 @@ class SearchDetailReactor: Reactor {
                 fetchRepositories(text: currentState.searchText),
                 .just(.setFetching(false))
             ])
+            
+        case .showMenu:
+            return showMenuAction()
         }
     }
     
@@ -72,6 +78,9 @@ class SearchDetailReactor: Reactor {
             
         case .setEndPage(let isEnd):
             newState.endPaging = isEnd
+            
+        case .setShowMenu(let shouldShow):
+            newState.shouldShowMenu = shouldShow
         }
         
         return newState
@@ -126,11 +135,21 @@ extension SearchDetailReactor {
             self.reloadAll()
         ])
     }
+}
+
+extension SearchDetailReactor {
     
     func reloadAll() -> Observable<Mutation> {
         return .concat([
             .just(.setReload(true)),
             .just(.setReload(false))
+        ])
+    }
+    
+    func showMenuAction() -> Observable<Mutation> {
+        return .concat([
+            .just(.setShowMenu(true)),
+            .just(.setShowMenu(false))
         ])
     }
 }
