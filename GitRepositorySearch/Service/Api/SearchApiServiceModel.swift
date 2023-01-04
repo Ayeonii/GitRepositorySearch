@@ -21,7 +21,7 @@ enum SearchRepositoryOrderType: String, CaseIterable {
 }
 
 struct SearchRepositoryParams: Codable {
-    var q: String
+    var text: String
     var sort: String?
     var order: String?
     var perPage: Int
@@ -29,11 +29,19 @@ struct SearchRepositoryParams: Codable {
     
     enum CodingKeys: String, CodingKey {
 
-        case q = "q"
+        case text = "q"
         case sort = "sort"
         case order = "order"
         case perPage = "per_page"
         case page = "page"
+    }
+    
+    init(text: String, sort: SearchRepositorySortType?, order: SearchRepositoryOrderType?, perPage: Int, page: Int) {
+        self.text = text
+        self.sort = (sort == .default) ? nil : sort?.rawValue
+        self.order = order?.rawValue
+        self.perPage = perPage
+        self.page = page
     }
 }
 
