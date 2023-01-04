@@ -11,6 +11,10 @@ import ReactorKit
 class SearchDetailReactor: Reactor {
     var page = 1
     let perPage = 30
+    var totalRepositoryCount: Int = 0
+    var isLastPage: Bool {
+        return totalRepositoryCount <= page * perPage
+    }
     
     enum Action {
         case fetchRepository
@@ -18,13 +22,19 @@ class SearchDetailReactor: Reactor {
     
     enum Mutation {
         case setRepositories([SearchDetailCellModel])
-        case setPaginRepoIndex([Int])
+        case setPagingRepoIndex([Int])
+        case setFetching(Bool)
+        case setReload(Bool)
+        case setEndPage(Bool)
     }
     
     struct State {
         let searchText: String
         var repositories: [SearchDetailCellModel] = []
         @Pulse var pagingRows: [Int] = []
+        var isFetching: Bool = false
+        var shouldReload: Bool = false
+        var endPaging: Bool = false
     }
     
     let initialState: State
@@ -36,7 +46,11 @@ class SearchDetailReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .fetchRepository:
-            return fetchRepositories(text: currentState.searchText)
+            return .concat([
+                .just(.setFetching(true)),
+                fetchRepositories(text: currentState.searchText),
+                .just(.setFetching(false))
+            ])
         }
     }
     
@@ -47,8 +61,17 @@ class SearchDetailReactor: Reactor {
         case .setRepositories(let repositories):
             newState.repositories = repositories
             
-        case .setPaginRepoIndex(let indexs):
+        case .setPagingRepoIndex(let indexs):
             newState.pagingRows = indexs
+            
+        case .setFetching(let isFetching):
+            newState.isFetching = isFetching
+            
+        case .setReload(let shouldReload):
+            newState.shouldReload = shouldReload
+            
+        case .setEndPage(let isEnd):
+            newState.endPaging = isEnd
         }
         
         return newState
@@ -56,39 +79,59 @@ class SearchDetailReactor: Reactor {
 }
 
 extension SearchDetailReactor {
-    
-    func fetchRepositories(text: String, sort: SearchRepositorySortType? = nil, order: SearchRepositoryOrderType? = nil) -> Observable<Mutation> {
+    private func fetchRepositories(text: String, sort: SearchRepositorySortType? = nil, order: SearchRepositoryOrderType? = nil) -> Observable<Mutation> {
+        guard !currentState.endPaging else { return .empty() }
         
-        SearchApi.fetchRepositoryWithText(text: text,
-                                          sort: sort,
-                                          order: order,
-                                          perPage: perPage,
-                                          page: page)
+        return SearchApi.fetchRepositoryWithText(text: text,
+                                                 sort: sort,
+                                                 order: order,
+                                                 perPage: perPage,
+                                                 page: page)
         .flatMap {[weak self] res -> Observable<Mutation> in
             guard let self = self,
                   let repos = res.repositories,
                   res.incompleteResults == false else { return .empty() }
             
-            let isPaging = self.page > 1
-            self.page += 1
+            self.totalRepositoryCount = res.totalCount ?? 0
             
             let lastRepos = self.currentState.repositories
             let newRepos = SearchDetailModel(from: repos).repositories
             
-            if isPaging {
-                let lastRepoCount = lastRepos.count
-                let pagingRepos = Array(lastRepoCount..<(lastRepoCount + newRepos.count))
-                return .concat([
-                    .just(.setPaginRepoIndex(pagingRepos)),
-                    .just(.setRepositories(lastRepos + newRepos))
-                ])
-            }
-
-            return .just(.setRepositories(lastRepos + newRepos))
+            return self.setRepositoryByPaging(lastRepos: lastRepos, newRepos: newRepos)
         }
         .catch {
             log.error($0)
             return .empty()
         }
     }
+    
+    private func setRepositoryByPaging(lastRepos: [SearchDetailCellModel], newRepos: [SearchDetailCellModel]) -> Observable<Mutation> {
+        let isLast = self.isLastPage
+        let isPaging = self.page > 1
+        self.page += 1
+        
+        if isPaging {
+            let lastRepoCount = lastRepos.count
+            let pagingRepos = Array(lastRepoCount..<(lastRepoCount + newRepos.count))
+            return .concat([
+                .just(.setEndPage(isLast)),
+                .just(.setPagingRepoIndex(pagingRepos)),
+                .just(.setRepositories(lastRepos + newRepos))
+            ])
+        }
+        
+        return .concat([
+            .just(.setEndPage(isLast)),
+            .just(.setRepositories(lastRepos + newRepos)),
+            self.reloadAll()
+        ])
+    }
+    
+    func reloadAll() -> Observable<Mutation> {
+        return .concat([
+            .just(.setReload(true)),
+            .just(.setReload(false))
+        ])
+    }
 }
+

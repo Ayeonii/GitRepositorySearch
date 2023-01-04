@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import SwiftyJSON
 
 enum HTTPMethod {
     case get
@@ -76,6 +77,8 @@ struct HttpAPIManager {
     where T: Decodable {
         
         return Observable.create { observer -> Disposable in
+            
+            log.debug("request: \(request)")
             URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     observer.onError(error)
@@ -83,7 +86,7 @@ struct HttpAPIManager {
                 
                 if let statusCode = (response as? HTTPURLResponse)?.statusCode,
                    let responseData = data {
-                    
+                    log.debug("response ==> \(JSON(responseData))")
                     switch statusCode {
                     case (200..<300):
                         do {
@@ -94,9 +97,18 @@ struct HttpAPIManager {
                             observer.onError(ApiError.decodingError(error))
                         }
                     case (400..<500):
-                        observer.onError(ApiError.client(statusCode, "Client has problem."))
+                        if let msg = JSON(responseData)["message"].string {
+                            observer.onError(ApiError.client(statusCode, msg))
+                        } else {
+                            observer.onError(ApiError.client(statusCode, "UnExpected Error"))
+                        }
+                        
                     default:
-                        observer.onError(ApiError.server(statusCode, "Sever has problem."))
+                        if let msg = JSON(responseData)["message"].string {
+                            observer.onError(ApiError.server(statusCode, msg))
+                        } else {
+                            observer.onError(ApiError.server(statusCode, "UnExpected Error"))
+                        }
                     }
                 }
             }
@@ -159,6 +171,7 @@ extension URLRequest {
         
         if let data = try? JSONSerialization.data(withJSONObject: bodyParam, options: JSONSerialization.WritingOptions.prettyPrinted) {
             let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            log.debug("Request body: \(String(describing: json))")
             return json?.data(using: String.Encoding.utf8.rawValue)
         } else {
             return nil
