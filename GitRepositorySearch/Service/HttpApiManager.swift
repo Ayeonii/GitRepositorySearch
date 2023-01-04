@@ -79,7 +79,7 @@ struct HttpAPIManager {
         return Observable.create { observer -> Disposable in
             
             log.debug("request: \(request)")
-            URLSession.shared.dataTask(with: request) { data, response, error in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     observer.onError(error)
                 }
@@ -113,9 +113,12 @@ struct HttpAPIManager {
                     }
                 }
             }
-            .resume()
             
-            return Disposables.create()
+            task.resume()
+            
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
 }
