@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import RxSwift
+import Then
 
 public protocol ImageItem {
     var image: UIImage? { get set }
@@ -20,14 +21,15 @@ public class ImageCache {
     
     private init() {}
     
-    private let cacheImages = NSCache<NSURL, UIImage>()
+    private let cacheImages = NSCache<NSURL, UIImage>().then {
+        $0.totalCostLimit = 50
+    }
     
     private final func image(url: NSURL) -> UIImage? {
         return cacheImages.object(forKey: url)
     }
     
     final func load(url: NSURL) -> Observable<UIImage?> {
-        
         return Observable.create { [weak self] observer -> Disposable in
             guard let self = self else { return Disposables.create() }
             
@@ -58,7 +60,10 @@ public class ImageCache {
                 task.cancel()
             }
         }
-        
+    }
+    
+    final func clearCache() {
+        cacheImages.removeAllObjects()
     }
 }
 

@@ -7,6 +7,7 @@
 
 import UIKit
 import ReactorKit
+import RxCocoa
 import RxSwift
 import SnapKit
 import Then
@@ -84,6 +85,16 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
             .drive(onNext: { [weak self] rows in
                 let insertIndexPaths: [IndexPath] = rows.map {IndexPath(row: $0, section: 0)}
                 self?.tableView.insertRows(at: insertIndexPaths, with: .fade)
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .compactMap{ $0.moveLink }
+            .asDriver{ _ in .never() }
+            .drive(onNext: { link in
+                if let url = URL(string: link) {
+                    UIApplication.shared.open(url, options: [:])
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -164,6 +175,11 @@ extension SearchDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         guard let repos = state.repositories, repos.isEmpty else { return 0 }
         return 60
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let link = state.repositories?[indexPath.row].linkUrl else { return }
+        reactor.action.onNext(.moveToLink(link))
     }
 }
 

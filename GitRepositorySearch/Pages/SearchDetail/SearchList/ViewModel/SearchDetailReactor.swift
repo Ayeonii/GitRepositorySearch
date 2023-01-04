@@ -21,6 +21,7 @@ class SearchDetailReactor: Reactor {
         case showMenu
         case sortOption(SearchRepositorySortType)
         case orderOption(SearchRepositoryOrderType)
+        case moveToLink(String)
     }
     
     enum Mutation {
@@ -31,6 +32,7 @@ class SearchDetailReactor: Reactor {
         case setEndPage(Bool)
         case setShowMenu(Bool)
         case setSortOption(SearchRepositorySortType)
+        case setMoveLink(String?)
     }
     
     struct State {
@@ -39,9 +41,10 @@ class SearchDetailReactor: Reactor {
         @Pulse var pagingRows: [Int] = []
         var isFetching: Bool = false
         var shouldReload: Bool = false
-        var endPaging: Bool = false
         var shouldShowMenu: Bool = false
+        var endPaging: Bool = false
         var sortingOption: SearchRepositorySortType = .default
+        var moveLink: String?
     }
     
     let initialState: State
@@ -78,6 +81,9 @@ class SearchDetailReactor: Reactor {
                 fetchRepositories(text: currentState.searchText, sort: currentState.sortingOption, order: option),
                 .just(.setFetching(false))
             ])
+            
+        case .moveToLink(let link):
+            return moveLinkAction(link)
         }
     }
     
@@ -105,6 +111,9 @@ class SearchDetailReactor: Reactor {
             
         case .setSortOption(let sortOption):
             newState.sortingOption = sortOption
+            
+        case .setMoveLink(let link):
+            newState.moveLink = link
         }
         
         return newState
@@ -180,6 +189,13 @@ extension SearchDetailReactor {
         return .concat([
             .just(.setShowMenu(true)),
             .just(.setShowMenu(false))
+        ])
+    }
+    
+    func moveLinkAction(_ link: String?) -> Observable<Mutation> {
+        return .concat([
+            .just(.setMoveLink(link)),
+            .just(.setMoveLink(nil))
         ])
     }
 }

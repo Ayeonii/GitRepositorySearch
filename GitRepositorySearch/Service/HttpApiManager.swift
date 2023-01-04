@@ -87,6 +87,7 @@ struct HttpAPIManager {
                 if let statusCode = (response as? HTTPURLResponse)?.statusCode,
                    let responseData = data {
                     
+                    //log.debug("response: \(JSON(responseData))")
                     switch statusCode {
                     case (200..<300):
                         do {

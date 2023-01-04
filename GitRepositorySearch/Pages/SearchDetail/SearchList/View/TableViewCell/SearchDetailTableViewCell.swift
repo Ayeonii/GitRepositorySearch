@@ -24,7 +24,7 @@ class SearchDetailTableViewCell: UITableViewCell {
     let userNameLabel = UILabel().then {
         $0.textAlignment = .left
         $0.font = .systemFont(ofSize: 12)
-        $0.textColor = .systemGray2
+        $0.tintColor = .systemGray
     }
     
     let repoNameLabel = UILabel().then {
@@ -50,6 +50,10 @@ class SearchDetailTableViewCell: UITableViewCell {
         $0.textColor = .systemGray
     }
     
+    let languageColorView = UIView().then {
+        $0.backgroundColor = UIColor(rgb: 0xccccccc)
+    }
+    
     let languageLabel = UILabel().then {
         $0.textAlignment = .left
         $0.font = .systemFont(ofSize: 12)
@@ -59,17 +63,20 @@ class SearchDetailTableViewCell: UITableViewCell {
     var cellModel: SearchDetailCellModel? {
         didSet {
             guard let model = cellModel else { return }
-            self.imageTask = repoImage.downloadImage(url: model.image)
+            self.imageTask = repoImage.downloadImage(url: model.image, width: 20)
             self.userNameLabel.text = model.ownerName
             self.repoNameLabel.text = model.repositoryName
             self.descLabel.text = model.description
             self.starCountLabel.text = model.starCount.toDecimal()
+            self.languageColorView.backgroundColor = UIColor(rgb: model.languageColor)
             self.languageLabel.text = model.language
+            self.languageColorView.isHidden = model.language.isEmpty
         }
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         configureLayout()
     }
     
@@ -77,10 +84,16 @@ class SearchDetailTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        languageColorView.layer.cornerRadius = languageColorView.bounds.height / 2
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         imageTask?.dispose()
         repoImage.image = nil
+        languageColorView.backgroundColor = UIColor(rgb: 0xccccccc)
     }
     
     func configureLayout() {
@@ -90,6 +103,7 @@ class SearchDetailTableViewCell: UITableViewCell {
         self.contentView.addSubview(descLabel)
         self.contentView.addSubview(starButton)
         self.contentView.addSubview(starCountLabel)
+        self.contentView.addSubview(languageColorView)
         self.contentView.addSubview(languageLabel)
         
         repoImage.snp.makeConstraints {
@@ -111,7 +125,7 @@ class SearchDetailTableViewCell: UITableViewCell {
         descLabel.snp.makeConstraints {
             $0.leading.equalTo(repoImage)
             $0.trailing.equalToSuperview().offset(-10)
-            $0.height.greaterThanOrEqualTo(15)
+            $0.height.greaterThanOrEqualTo(0)
             $0.top.equalTo(repoNameLabel.snp.bottom).offset(10)
         }
         
@@ -127,8 +141,14 @@ class SearchDetailTableViewCell: UITableViewCell {
             $0.centerY.equalTo(starButton)
         }
         
-        languageLabel.snp.makeConstraints {
+        languageColorView.snp.makeConstraints {
+            $0.width.height.equalTo(8)
             $0.leading.equalTo(starCountLabel.snp.trailing).offset(10)
+            $0.centerY.equalTo(starButton)
+        }
+        
+        languageLabel.snp.makeConstraints {
+            $0.leading.equalTo(languageColorView.snp.trailing).offset(3)
             $0.centerY.equalTo(starButton)
         }
     }

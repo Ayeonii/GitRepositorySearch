@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftyJSON
+import UIKit
 
 struct SearchDetailModel {
     var repositories: [SearchDetailCellModel] = []
@@ -22,6 +24,7 @@ struct SearchDetailCellModel {
     var description: String
     var starCount: Int
     var language: String
+    var languageColor: Int
     var linkUrl: String
     
     init(from res: SeachRepositoryItems) {
@@ -31,6 +34,24 @@ struct SearchDetailCellModel {
         self.description = res.description ?? ""
         self.starCount = res.stargazersCount ?? 0
         self.language = res.language ?? ""
+        self.languageColor = LanguageColor.getColorRgb(language: res.language)
         self.linkUrl = res.htmlUrl ?? ""
+    }
+}
+
+struct LanguageColor {
+    static func getColorRgb(language lang: String?) -> Int {
+        let defaultColor = 0xcccccc
+        guard let languageName = lang,
+              let fileLocation = Bundle.main.path(forResource: "languageColors", ofType: "json") else { return defaultColor }
+        let fileUrl = URL(fileURLWithPath: fileLocation)
+        
+        guard let jsonString = try? String(contentsOf: fileUrl) else { return defaultColor }
+        if let data = jsonString.data(using: .utf8),
+           let langColor = JSON(data)[languageName].string {
+            return Int(langColor, radix: 16) ?? -1
+        }
+            
+        return defaultColor
     }
 }

@@ -10,14 +10,21 @@ import RxSwift
 
 extension UIImageView {
     
-    func downloadImage(url: String, placeholder: UIImage? = nil) -> Disposable? {
+    func downloadImage(url: String, width: CGFloat?, placeholder: UIImage? = nil) -> Disposable? {
         self.image = placeholder
         guard let imageUrl: URL = URL(string: url) else { return nil }
         
         return ImageCache.shared.load(url: imageUrl as NSURL)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: {[weak self] image in
-                self?.image = image
+                guard let self = self else { return }
+                let resizedImage = (width == nil) ? image : image?.resize(newWidth: width!)
+                
+                UIView.transition(with: self,
+                              duration: 0.4,
+                              options: .transitionCrossDissolve,
+                              animations: { self.image = resizedImage },
+                              completion: nil)
             }, onCompleted: {
                 //log.debug("completed")
             }, onDisposed: {
