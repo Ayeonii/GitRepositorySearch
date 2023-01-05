@@ -33,10 +33,10 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
         super.viewWillAppear(animated)
         setupNavigation()
     }
-
+    
     func bindAction(_ reactor: MainSearchReactor) {
         searchController.searchBar.rx.text
-            .debounce(RxTimeInterval.microseconds(200), scheduler: MainScheduler.instance)
+            .debounce(RxTimeInterval.microseconds(300), scheduler: MainScheduler.instance)
             .map { text in MainSearchReactor.Action.filterRecentList(text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -51,25 +51,25 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
     func bindState(_ reactor: MainSearchReactor) {
         reactor.pulse(\.$filteredList)
             .bind(to: resultVC.tableView.rx.items(cellIdentifier: SearchFilterTableViewCell.identifier, cellType: SearchFilterTableViewCell.self)) { index, item, cell in
-
+                
                 cell.titleLabel.text = item
-              
+                
                 cell.coverView.rx.tapGesture()
                     .when(.recognized)
-                    .map { _ in MainSearchReactor.Action.goToResult(cell.titleLabel.text ?? "") }
+                    .map { _ in MainSearchReactor.Action.goToResult(cell.titleLabel.text) }
                     .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
-                                
+                
                 cell.deleteBtn.rx.tap
-                    .map { MainSearchReactor.Action.deleteRecent(cell.titleLabel.text ?? "") }
+                    .map { MainSearchReactor.Action.deleteRecent(cell.titleLabel.text) }
                     .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
             }
             .disposed(by: disposeBag)
-    
+        
         reactor.state
-            .compactMap{ $0.moveToDetailText }
-            .asDriver{ _ in .never() }
+            .compactMap { $0.moveToDetailText }
+            .asDriver { _ in .never() }
             .drive(onNext: { [weak self] text in
                 self?.moveToSearchDetail(text: text)
             })
@@ -128,7 +128,7 @@ extension MainSearchViewController: UITableViewDelegate {
             .map { MainSearchReactor.Action.clearRecentList }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-           
+        
         return header
     }
     
@@ -136,5 +136,3 @@ extension MainSearchViewController: UITableViewDelegate {
         return 50
     }
 }
-
-

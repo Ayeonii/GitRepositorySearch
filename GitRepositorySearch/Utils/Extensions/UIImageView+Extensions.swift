@@ -16,15 +16,15 @@ extension UIImageView {
         
         return ImageCache.shared.load(url: imageUrl as NSURL)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: {[weak self] image in
+            .subscribe(onNext: { [weak self] image in
                 guard let self = self else { return }
                 let resizedImage = (width == nil) ? image : image?.resize(newWidth: width!)
                 
                 UIView.transition(with: self,
-                              duration: 0.4,
-                              options: .transitionCrossDissolve,
-                              animations: { self.image = resizedImage },
-                              completion: nil)
+                                  duration: 0.4,
+                                  options: .transitionCrossDissolve,
+                                  animations: { self.image = resizedImage },
+                                  completion: nil)
             }, onCompleted: {
                 //log.debug("completed")
             }, onDisposed: {

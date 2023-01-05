@@ -13,7 +13,6 @@ def commonPod
   #UI
   pod 'SnapKit'
   pod 'Then'
-  
 end
 
 target 'GitRepositorySearch' do

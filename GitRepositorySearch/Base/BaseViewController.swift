@@ -11,8 +11,6 @@ import ReactorKit
 
 //MARK: - TransitionType
 enum TransitionType {
-    static let defaultDimmColor = UIColor.black.withAlphaComponent(0.6)
-    case dimmPresent(from: PresentationDirection = .bottom, dimmColor: UIColor = TransitionType.defaultDimmColor)
     case present
     case push
     case naviPresent
@@ -33,9 +31,9 @@ extension BindReactorActionStateProtocol {
     }
 }
 
-//MARK: - View Transition
+//MARK: - Transition Protocol
 protocol BaseTransitionProtocol {
-    var transitionType : TransitionType? {get set}
+    var transitionType: TransitionType? { get set }
 }
 
 //MARK: - View Protocol
@@ -44,14 +42,12 @@ protocol ConfigureViewProtocol {
     func configureLayer()
 }
 
-// MARK: - SuperClass of Common ViewControllers
+// MARK: - SuperClass of ViewControllers In App
 typealias BaseViewController<T: Reactor> = BaseViewControllerClass<T> & BindReactorActionStateProtocol
 
 class BaseViewControllerClass<T: Reactor>: UIViewController, BaseTransitionProtocol, ConfigureViewProtocol {
-
-    typealias ReactorType = T
     
-    lazy var dimmTransitionDelegate = DimmPresentManager()
+    typealias ReactorType = T
     
     var disposeBag = DisposeBag()
     
@@ -87,9 +83,9 @@ class BaseViewControllerClass<T: Reactor>: UIViewController, BaseTransitionProto
         self.configureLayer()
     }
     
-    func configureLayout() {}
+    func configureLayout() { }
     
-    func configureLayer() {}
+    func configureLayer() { }
 }
 
 extension BaseViewControllerClass {
@@ -105,7 +101,7 @@ extension BaseViewControllerClass {
     }
     
     ///Move Action
-    func moveToTarget(to vc: UIViewController, using style: TransitionType, animated: Bool, completion: (() -> Void)? = nil) {
+    private func moveToTarget(to vc: UIViewController, using style: TransitionType, animated: Bool, completion: (() -> Void)? = nil) {
         let target = vc
         
         if var baseVC = target as? BaseTransitionProtocol {
@@ -117,30 +113,24 @@ extension BaseViewControllerClass {
             guard let nav = self.navigationController else { return }
             nav.pushViewController(target, animated: animated, completion: completion)
             
-        case .dimmPresent(let from, let dimmColor):
-            dimmTransitionDelegate.direction = from
-            dimmTransitionDelegate.dimmColor = dimmColor
-            target.modalPresentationStyle = .custom
-            target.transitioningDelegate = dimmTransitionDelegate
-            
-            self.present(target, animated: animated, completion: completion)
-            
         case .present:
             self.present(target, animated: animated, completion: completion)
-       
+            
         case .naviPresent:
             let navTarget = UINavigationController(rootViewController: target)
             self.present(navTarget, animated: animated, completion: completion)
         }
     }
-
+    
     ///Close ViewController By TransitionType Type
     func close(animated: Bool, completion: (() -> Void)? = nil) {
         switch self.transitionType {
         case .push:
             self.navigationController?.popViewController(animated: animated, completion: completion)
-        case .present, .dimmPresent, .naviPresent:
+            
+        case .present, .naviPresent:
             self.dismiss(animated: animated, completion: completion)
+            
         default:
             if let nav = self.navigationController {
                 nav.popViewController(animated: animated)
@@ -149,22 +139,4 @@ extension BaseViewControllerClass {
             }
         }
     }
-    
-    ///Close Presenting NavigationController
-    func closePresentedNavigation(animated: Bool, completion: (() -> Void)? = nil) {
-        self.navigationController?.dismiss(animated: animated, completion: completion)
-    }
-    
-    ///Move To RootViweController
-    func moveToRoot(animated: Bool, completion: (() -> Void)? = nil) {
-        DispatchQueue.main.async {
-            if let rootNav = UIApplication.shared.windows.first?.rootViewController?.navigationController {
-                rootNav.dismiss(animated: animated) {
-                    rootNav.popToRootViewController(animated: animated)
-                    completion?()
-                }
-            }
-        }
-    }
 }
-

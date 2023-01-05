@@ -19,7 +19,7 @@ public protocol ImageItem {
 public class ImageCache {
     public static let shared = ImageCache()
     
-    private init() {}
+    private init() { }
     
     private let cacheImages = NSCache<NSURL, UIImage>().then {
         $0.totalCostLimit = 50
@@ -66,5 +66,3 @@ public class ImageCache {
         cacheImages.removeAllObjects()
     }
 }
-
-

@@ -41,10 +41,10 @@ class SearchOptionsReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .closeView:
-            return closeViewAction()
+            return closeViewMutation()
             
         case .selectOption(let option):
-            return selectOptionAction(option)
+            return selectOptionMutation(option)
         }
     }
     
@@ -67,14 +67,14 @@ class SearchOptionsReactor: Reactor {
 }
 
 extension SearchOptionsReactor {
-    func selectOptionAction(_ option: String) -> Observable<Mutation> {
+    func selectOptionMutation(_ option: String) -> Observable<Mutation> {
         switch viewType {
         case .sort:
             guard let type = SearchRepositorySortType(rawValue: option) else { return .empty() }
             return .concat([
                 .just(.setSortOption(type)),
                 .just(.setSortOption(nil)),
-                closeViewAction()
+                closeViewMutation()
             ])
             
         case .order:
@@ -82,12 +82,12 @@ extension SearchOptionsReactor {
             return .concat([
                 .just(.setOrderOption(type)),
                 .just(.setOrderOption(nil)),
-                closeViewAction()
+                closeViewMutation()
             ])
         }
     }
-     
-    func closeViewAction() -> Observable<Mutation> {
+    
+    func closeViewMutation() -> Observable<Mutation> {
         return .concat([
             .just(.setCloseView(true)),
             .just(.setCloseView(false))

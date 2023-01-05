@@ -11,6 +11,6 @@ extension Int {
     func toDecimal() -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        return formatter.string(from : NSNumber(value: self)) ?? "0"
+        return formatter.string(from: NSNumber(value: self)) ?? "0"
     }
 }

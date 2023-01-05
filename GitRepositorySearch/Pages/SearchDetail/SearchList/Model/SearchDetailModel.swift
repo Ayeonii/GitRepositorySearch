@@ -51,7 +51,7 @@ struct LanguageColor {
            let langColor = JSON(data)[languageName].string {
             return Int(langColor, radix: 16) ?? -1
         }
-            
+        
         return defaultColor
     }
 }

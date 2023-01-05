@@ -28,7 +28,6 @@ struct SearchRepositoryParams: Codable {
     var page: Int
     
     enum CodingKeys: String, CodingKey {
-
         case text = "q"
         case sort = "sort"
         case order = "order"
@@ -46,12 +45,11 @@ struct SearchRepositoryParams: Codable {
 }
 
 struct SearchRepositoryCodable: Codable {
-    let totalCount : Int?
-    let incompleteResults : Bool?
-    let repositories : [SeachRepositoryItems]?
-
+    let totalCount: Int?
+    let incompleteResults: Bool?
+    let repositories: [SeachRepositoryItems]?
+    
     enum CodingKeys: String, CodingKey {
-
         case totalCount = "total_count"
         case incompleteResults = "incomplete_results"
         case repositories = "items"
@@ -59,85 +57,84 @@ struct SearchRepositoryCodable: Codable {
 }
 
 struct SeachRepositoryItems: Codable {
-    let id : Int?
-    let nodeId : String?
-    let name : String?
-    let fullName : String?
-    let owner : RepositoryOwner?
-    let isPrivate : Bool?
-    let htmlUrl : String?
-    let description : String?
-    let fork : Bool?
-    let url : String?
-    let createdAt : String?
-    let updatedAt : String?
-    let pushedAt : String?
-    let homepage : String?
-    let size : Int?
-    let stargazersCount : Int?
-    let watchersCount : Int?
-    let language : String?
-    let forksCount : Int?
-    let openIssuesCount : Int?
-    let masterBranch : String?
-    let defaultBranch : String?
-    let score : Int?
-    let archiveUrl : String?
-    let assigneesUrl : String?
-    let blobsUrl : String?
-    let branchesUrl : String?
-    let collaboratorsUrl : String?
-    let commentsUrl : String?
-    let commitsUrl : String?
-    let compareUrl : String?
-    let contentsUrl : String?
-    let contributorsUrl : String?
-    let deploymentsUrl : String?
-    let downloadsUrl : String?
-    let eventsUrl : String?
-    let forksUrl : String?
-    let gitCommitsUrl : String?
-    let gitRefsUrl : String?
-    let gitTagsUrl : String?
-    let gitUrl : String?
-    let issueCommentUrl : String?
-    let issueEventsUrl : String?
-    let issuesUrl : String?
-    let keysUrl : String?
-    let labelsUrl : String?
-    let languagesUrl : String?
-    let mergesUrl : String?
-    let milestonesUrl : String?
-    let notificationsUrl : String?
-    let pullsUrl : String?
-    let releasesUrl : String?
-    let sshUrl : String?
-    let stargazersUrl : String?
-    let statusesUrl : String?
-    let subscribersUrl : String?
-    let subscriptionUrl : String?
-    let tagsUrl : String?
-    let teamsUrl : String?
-    let treesUrl : String?
-    let cloneUrl : String?
-    let mirrorUrl : String?
-    let hooksUrl : String?
-    let svnUrl : String?
-    let forks : Int?
-    let openIssues : Int?
-    let watchers : Int?
-    let hasIssues : Bool?
-    let hasProjects : Bool?
-    let hasPages : Bool?
-    let hasWiki : Bool?
-    let hasDownloads : Bool?
-    let archived : Bool?
-    let disabled : Bool?
-    let visibility : String?
-    let license : RepositoryLicense?
-
+    let id: Int?
+    let nodeId: String?
+    let name: String?
+    let fullName: String?
+    let owner: RepositoryOwner?
+    let isPrivate: Bool?
+    let htmlUrl: String?
+    let description: String?
+    let fork: Bool?
+    let url: String?
+    let createdAt: String?
+    let updatedAt: String?
+    let pushedAt: String?
+    let homepage: String?
+    let size: Int?
+    let stargazersCount: Int?
+    let watchersCount: Int?
+    let language: String?
+    let forksCount: Int?
+    let openIssuesCount: Int?
+    let masterBranch: String?
+    let defaultBranch: String?
+    let score: Int?
+    let archiveUrl: String?
+    let assigneesUrl: String?
+    let blobsUrl: String?
+    let branchesUrl: String?
+    let collaboratorsUrl: String?
+    let commentsUrl: String?
+    let commitsUrl: String?
+    let compareUrl: String?
+    let contentsUrl: String?
+    let contributorsUrl: String?
+    let deploymentsUrl: String?
+    let downloadsUrl: String?
+    let eventsUrl: String?
+    let forksUrl: String?
+    let gitCommitsUrl: String?
+    let gitRefsUrl: String?
+    let gitTagsUrl: String?
+    let gitUrl: String?
+    let issueCommentUrl: String?
+    let issueEventsUrl: String?
+    let issuesUrl: String?
+    let keysUrl: String?
+    let labelsUrl: String?
+    let languagesUrl: String?
+    let mergesUrl: String?
+    let milestonesUrl: String?
+    let notificationsUrl: String?
+    let pullsUrl: String?
+    let releasesUrl: String?
+    let sshUrl: String?
+    let stargazersUrl: String?
+    let statusesUrl: String?
+    let subscribersUrl: String?
+    let subscriptionUrl: String?
+    let tagsUrl: String?
+    let teamsUrl: String?
+    let treesUrl: String?
+    let cloneUrl: String?
+    let mirrorUrl: String?
+    let hooksUrl: String?
+    let svnUrl: String?
+    let forks: Int?
+    let openIssues: Int?
+    let watchers: Int?
+    let hasIssues: Bool?
+    let hasProjects: Bool?
+    let hasPages: Bool?
+    let hasWiki: Bool?
+    let hasDownloads: Bool?
+    let archived: Bool?
+    let disabled: Bool?
+    let visibility: String?
+    let license: RepositoryLicense?
+    
     enum CodingKeys: String, CodingKey {
-
         case id = "id"
         case nodeId = "node_id"
         case name = "name"
@@ -217,28 +214,27 @@ struct SeachRepositoryItems: Codable {
     }
 }
 
-struct RepositoryOwner : Codable {
-    let login : String?
-    let id : Int?
-    let nodeId : String?
-    let avatarUrl : String?
-    let gravatarId : String?
-    let url : String?
-    let receivedEventsUrl : String?
-    let type : String?
-    let htmlUrl : String?
-    let followersUrl : String?
-    let followingUrl : String?
-    let gistsUrl : String?
-    let starredUrl : String?
-    let subscriptionsUrl : String?
-    let organizationsUrl : String?
-    let reposUrl : String?
-    let eventsUrl : String?
-    let siteAdmin : Bool?
-
+struct RepositoryOwner: Codable {
+    let login: String?
+    let id: Int?
+    let nodeId: String?
+    let avatarUrl: String?
+    let gravatarId: String?
+    let url: String?
+    let receivedEventsUrl: String?
+    let type: String?
+    let htmlUrl: String?
+    let followersUrl: String?
+    let followingUrl: String?
+    let gistsUrl: String?
+    let starredUrl: String?
+    let subscriptionsUrl: String?
+    let organizationsUrl: String?
+    let reposUrl: String?
+    let eventsUrl: String?
+    let siteAdmin: Bool?
+    
     enum CodingKeys: String, CodingKey {
-
         case login = "login"
         case id = "id"
         case nodeId = "node_id"
@@ -261,16 +257,15 @@ struct RepositoryOwner : Codable {
 }
 
 
-struct RepositoryLicense : Codable {
-    let key : String?
-    let name : String?
-    let url : String?
-    let spdxId : String?
-    let nodeId : String?
-    let htmlUrl : String?
-
+struct RepositoryLicense: Codable {
+    let key: String?
+    let name: String?
+    let url: String?
+    let spdxId: String?
+    let nodeId: String?
+    let htmlUrl: String?
+    
     enum CodingKeys: String, CodingKey {
-
         case key = "key"
         case name = "name"
         case url = "url"
@@ -279,4 +274,3 @@ struct RepositoryLicense : Codable {
         case htmlUrl = "html_url"
     }
 }
-

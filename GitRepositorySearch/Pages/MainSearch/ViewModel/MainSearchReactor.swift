@@ -12,7 +12,7 @@ class MainSearchReactor: Reactor {
     enum Action {
         case filterRecentList(String?)
         case goToResult(String?)
-        case deleteRecent(String)
+        case deleteRecent(String?)
         case clearRecentList
         case saveRecentText(String)
     }
@@ -41,21 +41,21 @@ class MainSearchReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-       
+            
         case .filterRecentList(let text):
-            return filterRecentList(text: text)
-            
-        case .goToResult(let text):
-            return goToResult(text: text)
-            
-        case .clearRecentList:
-            return clearAllRecent()
+            return filterRecentListMutation(text: text)
             
         case .deleteRecent(let text):
-            return deleteRecentItem(text: text)
+            return deleteRecentMutation(text: text)
             
         case .saveRecentText(let text):
-            return saveRecent(text: text)
+            return saveRecentTextMutation(text: text)
+            
+        case .clearRecentList:
+            return clearRecentListMutation()
+            
+        case .goToResult(let text):
+            return goToResultMutation(text: text)
         }
     }
     
@@ -78,50 +78,38 @@ class MainSearchReactor: Reactor {
 }
 
 extension MainSearchReactor {
-    func saveRecent(text: String?) -> Observable<Mutation> {
+    private func saveRecentTextMutation(text: String?) -> Observable<Mutation> {
         guard let text = text else { return .empty() }
-        var currentSavedRecentList = currentState.recentList
-        currentSavedRecentList.removeAll(where: { $0 == text })
-        currentSavedRecentList.insert(text, at: 0)
+        let currentSavedRecentList = makeTargetMovedList(target: text, with: currentState.recentList, to: 0)
+        let currentFilterList = makeTargetMovedList(target: text, with: currentState.filteredList, to: 0)
         UserDefaultsManager.recentSearchList = currentSavedRecentList
-        
-        var currentFilterList =  currentState.filteredList
-        currentFilterList.removeAll(where: { $0 == text })
-        currentFilterList.insert(text, at: 0)
         
         return .merge(.just(.setFilteredList(currentFilterList)), .just(.setRecentList(currentSavedRecentList)))
     }
     
-    func filterRecentList(text: String?) -> Observable<Mutation> {
+    private func filterRecentListMutation(text: String?) -> Observable<Mutation> {
         let inputText = text ?? ""
         if inputText.isEmpty { return .just(.setFilteredList(currentState.recentList)) }
+        let filteredList = currentState.recentList.filter { $0.contains(inputText) }
         
-        let filteredList = currentState.recentList.filter{ $0.contains(inputText) }
-        log.debug(filteredList)
         return .just(.setFilteredList(filteredList))
     }
     
-    func clearAllRecent() -> Observable<Mutation> {
-        UserDefaultsManager.recentSearchList = []
-        
-        return .concat([
-            .just(.setRecentList([])),
-            .just(.setFilteredList([]))
-        ])
-    }
-    
-    func deleteRecentItem(text: String) -> Observable<Mutation> {
-        var currentSavedRecentList = currentState.recentList
-        currentSavedRecentList.removeAll(where: { $0 == text })
+    private func deleteRecentMutation(text: String?) -> Observable<Mutation> {
+        guard let text = text else { return .empty() }
+        let currentSavedRecentList = makeTargetRemovedList(target: text, with: currentState.recentList)
+        let currentFilterList = makeTargetRemovedList(target: text, with: currentState.filteredList)
         UserDefaultsManager.recentSearchList = currentSavedRecentList
-        
-        var currentFilterList = currentState.filteredList
-        currentFilterList.removeAll(where: { $0 == text })
         
         return .merge(.just(.setFilteredList(currentFilterList)), .just(.setRecentList(currentSavedRecentList)))
     }
     
-    func goToResult(text: String?) -> Observable<Mutation> {
+    private func clearRecentListMutation() -> Observable<Mutation> {
+        UserDefaultsManager.recentSearchList = []
+        return .merge(.just(.setRecentList([])), .just(.setFilteredList([])))
+    }
+    
+    private func goToResultMutation(text: String?) -> Observable<Mutation> {
         return .concat([
             .just(.setMoveToDetail(text)),
             .just(.setMoveToDetail(nil))
@@ -129,3 +117,17 @@ extension MainSearchReactor {
     }
 }
 
+extension MainSearchReactor {
+    func makeTargetMovedList(target: String, with list: [String], to index: Int) -> [String] {
+        var recentList = list
+        recentList.removeAll(where: { $0 == target })
+        recentList.insert(target, at: index)
+        return recentList
+    }
+    
+    func makeTargetRemovedList(target: String, with list: [String]) -> [String] {
+        var recentList = currentState.filteredList
+        recentList.removeAll(where: { $0 == target })
+        return recentList
+    }
+}

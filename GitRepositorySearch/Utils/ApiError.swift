@@ -63,14 +63,14 @@ extension ApiError: CustomNSError {
     var errorCode: Int {
         switch self {
         case .server(let statusCode, _),
-             .client(let statusCode, _):
+                .client(let statusCode, _):
             return statusCode
         default:
             return -1
         }
     }
     
-    var errorUserInfo: [String : Any] {
+    var errorUserInfo: [String: Any] {
         return [
             NSLocalizedDescriptionKey: errorDescription ?? "",
             NSLocalizedRecoverySuggestionErrorKey: recoverySuggestion ?? ""
@@ -78,9 +78,6 @@ extension ApiError: CustomNSError {
     }
     
     var nsError: NSError {
-        return NSError(apiError : self)
+        return NSError(apiError: self)
     }
 }
-
-
-

@@ -29,7 +29,7 @@ class SearchOptionsViewController: BaseViewController<SearchOptionsReactor> {
     
     override func configureLayout() {
         self.view.addSubview(tableView)
-       
+        
         tableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -37,7 +37,7 @@ class SearchOptionsViewController: BaseViewController<SearchOptionsReactor> {
     
     func bindAction(_ reactor: SearchOptionsReactor) {
         tableView.rx.modelSelected(String.self)
-            .map{ optionStr in SearchOptionsReactor.Action.selectOption(optionStr) }
+            .map { optionStr in SearchOptionsReactor.Action.selectOption(optionStr) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -51,9 +51,9 @@ class SearchOptionsViewController: BaseViewController<SearchOptionsReactor> {
             .disposed(by: disposeBag)
         
         reactor.state
-            .filter{ $0.shouldCloseView }
-            .asDriver{ _ in .never() }
-            .drive(onNext: {[weak self] _ in
+            .filter { $0.shouldCloseView }
+            .asDriver { _ in .never() }
+            .drive(onNext: { [weak self] _ in
                 self?.close(animated: true)
             })
             .disposed(by: disposeBag)

@@ -19,7 +19,7 @@ enum HTTPMethod {
 
 struct HttpAPIManager {
     static var headers: [String: String?] {
-        let headers : [String: String?] = [
+        let headers: [String: String?] = [
             "Content-Type": "application/vnd.github+json"
         ]
         return headers
@@ -27,9 +27,9 @@ struct HttpAPIManager {
     
     static func callRequest<T>(api: String,
                                method: HTTPMethod,
-                               param : Encodable? = nil,
+                               param: Encodable? = nil,
                                body: Encodable? = nil,
-                               responseClass:T.Type) -> Observable<T>
+                               responseClass: T.Type) -> Observable<T>
     where T: Decodable {
         do {
             guard let url = try self.makeURLWithQueryParams(urlStr: api, param: param) else { return Observable.error(ApiError.inValidUrl) }
@@ -72,11 +72,9 @@ struct HttpAPIManager {
         }
     }
     
-    static func callApi<T>(request : URLRequest, responseClass : T.Type) -> Observable<T>
+    static func callApi<T>(request: URLRequest, responseClass: T.Type) -> Observable<T>
     where T: Decodable {
-        
         return Observable.create { observer -> Disposable in
-            log.debug("Request => ", request)
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     observer.onError(error)
@@ -156,7 +154,7 @@ extension URLRequest {
             throw error
         }
     }
-   
+    
     func makeBody(body: Encodable?) throws -> Data? {
         guard let body = body else { return nil }
         
@@ -171,5 +169,3 @@ extension URLRequest {
         }
     }
 }
-
-

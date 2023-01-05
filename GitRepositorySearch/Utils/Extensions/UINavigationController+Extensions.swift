@@ -10,8 +10,8 @@ import UIKit
 
 extension UINavigationController {
     
-    func popToViewController(ofClass: AnyClass, animated: Bool = true, completion : (()->Void)? = nil) {
-        if let vc = viewControllers.filter({$0.isKind(of: ofClass)}).last {
+    func popToViewController(ofClass: AnyClass, animated: Bool = true, completion: (() -> Void)? = nil) {
+        if let vc = viewControllers.filter({ $0.isKind(of: ofClass) }).last {
             popToViewController(vc, animated: animated)
             doAfterAnimatingTransition(animated: animated, completion: completion)
         }

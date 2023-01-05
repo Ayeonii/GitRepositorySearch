@@ -13,7 +13,7 @@ import SnapKit
 import Then
 
 class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
-
+    
     lazy var tableView = UITableView(frame: .zero, style: .grouped).then {
         $0.delegate = self
         $0.dataSource = self
@@ -44,7 +44,7 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
                       !self.state.isFetching,
                       !self.state.endPaging
                 else { return false }
-
+                
                 let offset = point.y
                 let collectionViewContentSizeY = self.tableView.contentSize.height
                 let paginationY = collectionViewContentSizeY * 0.3
@@ -57,14 +57,14 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
     
     func bindState(_ reactor: SearchDetailReactor) {
         reactor.state
-            .filter{ $0.shouldReload }
-            .asDriver{ _ in .never() }
-            .drive(onNext: {[weak self] _ in
+            .filter { $0.shouldReload }
+            .asDriver { _ in .never() }
+            .drive(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 UIView.transition(with: self.tableView,
-                              duration: 0.2,
-                              options: .transitionCrossDissolve,
-                              animations: { self.tableView.reloadData()})
+                                  duration: 0.2,
+                                  options: .transitionCrossDissolve,
+                                  animations: { self.tableView.reloadData() })
                 
                 guard self.tableView.numberOfRows(inSection: 0) > 0 else { return }
                 self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
@@ -72,25 +72,25 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
             .disposed(by: disposeBag)
         
         reactor.state
-            .filter{ $0.shouldShowMenu }
-            .asDriver{ _ in .never() }
-            .drive(onNext: {[weak self] _ in
+            .filter { $0.shouldShowMenu }
+            .asDriver { _ in .never() }
+            .drive(onNext: { [weak self] _ in
                 self?.showMenuAction()
             })
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$pagingRows)
-            .filter{ !$0.isEmpty }
-            .asDriver{ _ in .never() }
+            .filter { !$0.isEmpty }
+            .asDriver { _ in .never() }
             .drive(onNext: { [weak self] rows in
-                let insertIndexPaths: [IndexPath] = rows.map {IndexPath(row: $0, section: 0)}
+                let insertIndexPaths: [IndexPath] = rows.map { IndexPath(row: $0, section: 0) }
                 self?.tableView.insertRows(at: insertIndexPaths, with: .fade)
             })
             .disposed(by: disposeBag)
         
         reactor.state
-            .compactMap{ $0.moveLink }
-            .asDriver{ _ in .never() }
+            .compactMap { $0.moveLink }
+            .asDriver { _ in .never() }
             .drive(onNext: { link in
                 if let url = URL(string: link) {
                     UIApplication.shared.open(url, options: [:])
@@ -139,17 +139,19 @@ extension SearchDetailViewController {
     
     func showOptionPage(optionType: SearchOptionsType) {
         let optionReactor = SearchOptionsReactor(viewType: optionType)
-        self.transition(to: .searchOptionsView(optionReactor), using: .naviPresent, animated: true)
+        let vc = Scene.searchOptionsView(optionReactor).instantiate()
+        vc.modalPresentationStyle = .popover
+        self.transition(to: vc, using: .naviPresent, animated: true)
         
         optionReactor.state
-            .compactMap{ $0.selectedSortOption }
-            .map{ option in SearchDetailReactor.Action.sortOption(option)}
+            .compactMap { $0.selectedSortOption }
+            .map { option in SearchDetailReactor.Action.sortOption(option) }
             .bind(to: reactor.action)
             .disposed(by: optionReactor.disposeBag)
         
         optionReactor.state
-            .compactMap{ $0.selectedOrderOption }
-            .map{ option in SearchDetailReactor.Action.orderOption(option)}
+            .compactMap { $0.selectedOrderOption }
+            .map { option in SearchDetailReactor.Action.orderOption(option) }
             .bind(to: reactor.action)
             .disposed(by: optionReactor.disposeBag)
     }

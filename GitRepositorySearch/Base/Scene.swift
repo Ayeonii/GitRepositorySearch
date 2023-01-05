@@ -31,7 +31,6 @@ extension Scene {
             
         case .searchOptionsView(let reactor):
             let vc = SearchOptionsViewController(reactor: reactor)
-            vc.modalPresentationStyle = .popover
             vc.bind(reactor: reactor)
             
             return vc
