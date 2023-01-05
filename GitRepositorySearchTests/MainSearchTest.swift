@@ -1,14 +1,14 @@
 //
-//  GitRepositorySearchTests.swift
+//  MainSearchTest.swift
 //  GitRepositorySearchTests
 //
-//  Created by Ayeon on 2023/01/02.
+//  Created by Ayeon on 2023/01/05.
 //
 
 import XCTest
 @testable import GitRepositorySearch
 
-final class GitRepositorySearchTests: XCTestCase {
+final class MainSearchTest: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

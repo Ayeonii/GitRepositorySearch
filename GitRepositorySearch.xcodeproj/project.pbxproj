@@ -15,12 +15,13 @@
 		C4314A222965711400A7D85B /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4314A212965711400A7D85B /* UIColor+Extensions.swift */; };
 		C4314A252965779700A7D85B /* languageColors.json in Resources */ = {isa = PBXBuildFile; fileRef = C4314A242965779700A7D85B /* languageColors.json */; };
 		C4314A272965856800A7D85B /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4314A262965856800A7D85B /* UIImage+Extensions.swift */; };
+		C49969B629668EAE005A5A21 /* SearchDetailTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49969B529668EAE005A5A21 /* SearchDetailTest.swift */; };
+		C49969BA29668EEC005A5A21 /* MainSearchTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49969B929668EEC005A5A21 /* MainSearchTest.swift */; };
 		C49DADC329652A6000C49B85 /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49DADC229652A6000C49B85 /* Int+Extensions.swift */; };
 		C4A0F6A1296273E800801CBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6A0296273E800801CBE /* AppDelegate.swift */; };
 		C4A0F6A3296273E800801CBE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6A2296273E800801CBE /* SceneDelegate.swift */; };
 		C4A0F6AA296273EA00801CBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4A0F6A9296273EA00801CBE /* Assets.xcassets */; };
 		C4A0F6AD296273EA00801CBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4A0F6AB296273EA00801CBE /* LaunchScreen.storyboard */; };
-		C4A0F6B8296273EA00801CBE /* GitRepositorySearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6B7296273EA00801CBE /* GitRepositorySearchTests.swift */; };
 		C4A0F6DB29627BC700801CBE /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6DA29627BC700801CBE /* BaseViewController.swift */; };
 		C4A0F6E029627C3900801CBE /* PresentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6DF29627C3900801CBE /* PresentManager.swift */; };
 		C4A0F6E229627D0700801CBE /* CustomLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A0F6E129627D0700801CBE /* CustomLog.swift */; };
@@ -65,6 +66,8 @@
 		C4314A212965711400A7D85B /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		C4314A242965779700A7D85B /* languageColors.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = languageColors.json; sourceTree = "<group>"; };
 		C4314A262965856800A7D85B /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		C49969B529668EAE005A5A21 /* SearchDetailTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailTest.swift; sourceTree = "<group>"; };
+		C49969B929668EEC005A5A21 /* MainSearchTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSearchTest.swift; sourceTree = "<group>"; };
 		C49DADC229652A6000C49B85 /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		C4A0F69D296273E800801CBE /* GitRepositorySearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitRepositorySearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4A0F6A0296273E800801CBE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -73,7 +76,6 @@
 		C4A0F6AC296273EA00801CBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C4A0F6AE296273EA00801CBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C4A0F6B3296273EA00801CBE /* GitRepositorySearchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GitRepositorySearchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C4A0F6B7296273EA00801CBE /* GitRepositorySearchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitRepositorySearchTests.swift; sourceTree = "<group>"; };
 		C4A0F6DA29627BC700801CBE /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		C4A0F6DF29627C3900801CBE /* PresentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentManager.swift; sourceTree = "<group>"; };
 		C4A0F6E129627D0700801CBE /* CustomLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLog.swift; sourceTree = "<group>"; };
@@ -242,7 +244,8 @@
 		C4A0F6B6296273EA00801CBE /* GitRepositorySearchTests */ = {
 			isa = PBXGroup;
 			children = (
-				C4A0F6B7296273EA00801CBE /* GitRepositorySearchTests.swift */,
+				C49969B929668EEC005A5A21 /* MainSearchTest.swift */,
+				C49969B529668EAE005A5A21 /* SearchDetailTest.swift */,
 			);
 			path = GitRepositorySearchTests;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 					};
 					C4A0F6B2296273EA00801CBE = {
 						CreatedOnToolsVersion = 14.0;
+						LastSwiftMigration = 1400;
 						TestTargetID = C4A0F69C296273E800801CBE;
 					};
 				};
@@ -589,7 +593,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4A0F6B8296273EA00801CBE /* GitRepositorySearchTests.swift in Sources */,
+				C49969BA29668EEC005A5A21 /* MainSearchTest.swift in Sources */,
+				C49969B629668EAE005A5A21 /* SearchDetailTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,11 +802,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 653TUFJ9Y7;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ayeon.GitRepositorySearchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -809,6 +820,8 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "GitRepositorySearchTests/GitRepositorySearchTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GitRepositorySearch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GitRepositorySearch";
@@ -821,11 +834,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 653TUFJ9Y7;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ayeon.GitRepositorySearchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -833,6 +852,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "GitRepositorySearchTests/GitRepositorySearchTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GitRepositorySearch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GitRepositorySearch";
