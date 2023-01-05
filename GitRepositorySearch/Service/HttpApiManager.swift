@@ -43,7 +43,7 @@ struct HttpAPIManager {
     
     static func makeURLWithQueryParams(urlStr: String, param: Encodable?) throws -> URL? {
         var queryParams: [String: Any] = [:]
-        guard let param = param else { return nil }
+        guard let param = param else { return URLComponents(string: urlStr)?.url }
         
         do {
             let paramData = try JSONEncoder().encode(param)
@@ -82,7 +82,7 @@ struct HttpAPIManager {
                 
                 if let statusCode = (response as? HTTPURLResponse)?.statusCode,
                    let responseData = data {
-                    //log.debug("response => \(JSON(responseData))")
+                    
                     switch statusCode {
                     case (200..<300):
                         do {
