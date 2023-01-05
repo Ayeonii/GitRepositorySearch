@@ -58,19 +58,19 @@ class SearchDetailReactor: Reactor {
         case .fetchRepository:
             return .concat([
                 .just(.setFetching(true)),
-                fetchRepositories(text: currentState.searchText),
+                fetchRepositoriesMutation(text: currentState.searchText),
                 .just(.setFetching(false))
             ])
             
         case .showMenu:
-            return showMenuAction()
+            return showMenuMutation()
             
         case .sortOption(let option):
             resetPage()
             return .concat([
                 .just(.setFetching(true)),
                 .just(.setSortOption(option)),
-                fetchRepositories(text: currentState.searchText, sort: option),
+                fetchRepositoriesMutation(text: currentState.searchText, sort: option),
                 .just(.setFetching(false))
             ])
             
@@ -78,12 +78,12 @@ class SearchDetailReactor: Reactor {
             resetPage()
             return .concat([
                 .just(.setFetching(true)),
-                fetchRepositories(text: currentState.searchText, sort: currentState.sortingOption, order: option),
+                fetchRepositoriesMutation(text: currentState.searchText, sort: currentState.sortingOption, order: option),
                 .just(.setFetching(false))
             ])
             
         case .moveToLink(let link):
-            return moveLinkAction(link)
+            return moveLinkMutation(link)
         }
     }
     
@@ -121,7 +121,8 @@ class SearchDetailReactor: Reactor {
 }
 
 extension SearchDetailReactor {
-    private func fetchRepositories(text: String, sort: SearchRepositorySortType? = nil, order: SearchRepositoryOrderType? = nil) -> Observable<Mutation> {
+    
+    private func fetchRepositoriesMutation(text: String, sort: SearchRepositorySortType? = nil, order: SearchRepositoryOrderType? = nil) -> Observable<Mutation> {
         guard !currentState.endPaging else { return .empty() }
         
         return SearchApi.fetchRepositoryWithText(text: text,
@@ -185,14 +186,14 @@ extension SearchDetailReactor {
         ])
     }
     
-    func showMenuAction() -> Observable<Mutation> {
+    func showMenuMutation() -> Observable<Mutation> {
         return .concat([
             .just(.setShowMenu(true)),
             .just(.setShowMenu(false))
         ])
     }
     
-    func moveLinkAction(_ link: String?) -> Observable<Mutation> {
+    func moveLinkMutation(_ link: String?) -> Observable<Mutation> {
         return .concat([
             .just(.setMoveLink(link)),
             .just(.setMoveLink(nil))

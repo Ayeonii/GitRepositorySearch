@@ -32,18 +32,17 @@ struct HttpAPIManager {
                                responseClass:T.Type) -> Observable<T>
     where T: Decodable {
         do {
-            guard let url = try self.makeURLWithQueryParams(url: api, param: param) else { return Observable.error(ApiError.inValidUrl) }
+            guard let url = try self.makeURLWithQueryParams(urlStr: api, param: param) else { return Observable.error(ApiError.inValidUrl) }
             let urlRequest = try URLRequest(url: url, method: method, body: body, headers: headers)
             
             return self.callApi(request: urlRequest, responseClass: responseClass)
-            
         } catch {
             return Observable.error(error)
         }
     }
     
-    static func makeURLWithQueryParams(url: String, param: Encodable?) throws -> URL? {
-        var queryParams : [String : Any] = [:]
+    static func makeURLWithQueryParams(urlStr: String, param: Encodable?) throws -> URL? {
+        var queryParams: [String: Any] = [:]
         guard let param = param else { return nil }
         
         do {
@@ -52,7 +51,7 @@ struct HttpAPIManager {
                 queryParams = paramObject
             }
             
-            var urlComponents = URLComponents(string: url)
+            var urlComponents = URLComponents(string: urlStr)
             var urlQueryItems: [URLQueryItem] = []
             
             for (key, value) in queryParams {
@@ -77,8 +76,7 @@ struct HttpAPIManager {
     where T: Decodable {
         
         return Observable.create { observer -> Disposable in
-            
-            log.debug("request: \(request)")
+            log.debug("Request => ", request)
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     observer.onError(error)
@@ -86,8 +84,7 @@ struct HttpAPIManager {
                 
                 if let statusCode = (response as? HTTPURLResponse)?.statusCode,
                    let responseData = data {
-                    
-                    //log.debug("response: \(JSON(responseData))")
+                    //log.debug("response => \(JSON(responseData))")
                     switch statusCode {
                     case (200..<300):
                         do {
@@ -161,24 +158,16 @@ extension URLRequest {
     }
    
     func makeBody(body: Encodable?) throws -> Data? {
-        var bodyParam: [String: Any] = [:]
         guard let body = body else { return nil }
         
         do {
-            let bodyData = try JSONEncoder().encode(body)
-            if let bodyObject = try JSONSerialization.jsonObject(with: bodyData, options: .allowFragments) as? [String: Any] {
-                bodyParam = bodyObject
-            }
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.outputFormatting = .prettyPrinted
+            let bodyData = try jsonEncoder.encode(body)
+            
+            return bodyData
         } catch {
             throw ApiError.encodingError(error)
-        }
-        
-        if let data = try? JSONSerialization.data(withJSONObject: bodyParam, options: JSONSerialization.WritingOptions.prettyPrinted) {
-            let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-            log.debug("Request body: \(String(describing: json))")
-            return json?.data(using: String.Encoding.utf8.rawValue)
-        } else {
-            return nil
         }
     }
 }

@@ -251,7 +251,6 @@
 			isa = PBXGroup;
 			children = (
 				C4A0F6F32962800400801CBE /* HttpApiManager.swift */,
-				C4A0F6F529629B6800801CBE /* ApiError.swift */,
 				C4A0F6F92962A9A400801CBE /* Api */,
 			);
 			path = Service;
@@ -281,6 +280,7 @@
 			children = (
 				C4A0F6FF2962E1F100801CBE /* UserDefaults */,
 				C4A0F6EF29627EB500801CBE /* Extensions */,
+				C4A0F6F529629B6800801CBE /* ApiError.swift */,
 				C4A0F6DF29627C3900801CBE /* PresentManager.swift */,
 				C4A0F6E129627D0700801CBE /* CustomLog.swift */,
 				C4BAAD2F296415C200D40016 /* ImageCache.swift */,
