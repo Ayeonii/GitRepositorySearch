@@ -2,13 +2,13 @@
 platform :ios, '14.0'
 
 def commonPod
-  pod 'SwiftyJSON', '~> 4.0'
+  pod 'SwiftyJSON'
   
   #Rx
-  pod 'RxSwift', '6.1.0'
-  pod 'RxGesture', '4.0.2'
-  pod 'RxKeyboard', '2.0.0'
-  pod 'ReactorKit', '3.2.0'
+  pod 'RxSwift'
+  pod 'RxGesture'
+  pod 'RxKeyboard'
+  pod 'ReactorKit'
   
   #UI
   pod 'SnapKit'
@@ -20,8 +20,3 @@ target 'GitRepositorySearch' do
   commonPod
 end
 
-target 'GitRepositorySearchTests' do
-  commonPod
-  pod 'RxTest'
-  pod 'RxBlocking'
-end
