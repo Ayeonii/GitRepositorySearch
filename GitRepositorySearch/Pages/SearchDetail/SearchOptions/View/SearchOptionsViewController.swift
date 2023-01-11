@@ -67,11 +67,12 @@ extension SearchOptionsViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .cancel,
             target: self,
-            action: #selector(cancelAction)
+            action: nil
         )
-    }
-    
-    @objc func cancelAction() {
-        reactor.action.onNext(.closeView)
+        
+        navigationItem.leftBarButtonItem?.rx.tap
+            .map{ SearchOptionsReactor.Action.closeView }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }

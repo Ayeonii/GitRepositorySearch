@@ -47,7 +47,7 @@ class SearchDetailViewController: BaseViewController<SearchDetailReactor> {
                 
                 let offset = point.y
                 let collectionViewContentSizeY = self.tableView.contentSize.height
-                let paginationY = collectionViewContentSizeY * 0.3
+                let paginationY = collectionViewContentSizeY * 0.4
                 return offset > collectionViewContentSizeY - paginationY
             }
             .map { _ in SearchDetailReactor.Action.fetchRepository }

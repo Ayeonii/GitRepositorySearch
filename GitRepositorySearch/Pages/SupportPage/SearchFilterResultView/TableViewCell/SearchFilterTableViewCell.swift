@@ -9,8 +9,6 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
-import RxCocoa
-import RxGesture
 
 class SearchFilterTableViewCell: UITableViewCell {
     static let identifier = "RecentSearchTableViewCell"

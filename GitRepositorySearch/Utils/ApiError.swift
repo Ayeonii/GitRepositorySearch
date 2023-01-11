@@ -31,7 +31,7 @@ extension ApiError: LocalizedError {
         case .convertImageFail:
             return "description: Converting To Image Fail"
         case .server(_, let msg),
-                .client(_, let msg):
+             .client(_, let msg):
             return "description: " + (msg ?? "")
         }
     }
@@ -49,7 +49,7 @@ extension ApiError: LocalizedError {
         case .convertImageFail:
             return "Check Image Data"
         case .server,
-                .client:
+             .client:
             return "Retry"
         }
     }
