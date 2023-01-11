@@ -32,6 +32,13 @@ class SearchFilterTableViewCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    var cellModel: SearchResultItemModel? {
+        didSet {
+            guard let model = cellModel else { return }
+            self.titleLabel.text = model.title
+        }
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none

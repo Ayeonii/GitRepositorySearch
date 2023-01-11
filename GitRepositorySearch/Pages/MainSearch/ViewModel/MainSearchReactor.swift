@@ -12,20 +12,20 @@ class MainSearchReactor: Reactor {
     enum Action {
         case filterRecentList(String?)
         case goToResult(String?)
-        case deleteRecent(String?)
+        case deleteRecent(SearchResultItemModel?)
         case clearRecentList
         case saveRecentText(String)
     }
     
     enum Mutation {
-        case setRecentList([String])
-        case setFilteredList([String])
+        case setRecentList([SearchResultItemModel])
+        case setFilteredList([SearchResultItemModel])
         case setMoveToDetail(String?)
     }
     
     struct State {
-        var recentList: [String]
-        @Pulse var filteredList: [String]
+        var recentList: [SearchResultItemModel]
+        @Pulse var filteredList: [SearchResultItemModel]
         @Pulse var shouldShowList: Bool = false
         var searchInputText: String?
         var moveToDetailText: String?
@@ -80,8 +80,10 @@ class MainSearchReactor: Reactor {
 extension MainSearchReactor {
     private func saveRecentTextMutation(text: String?) -> Observable<Mutation> {
         guard let text = text else { return .empty() }
-        let currentSavedRecentList = makeTargetMovedList(target: text, with: currentState.recentList, to: 0)
-        let currentFilterList = makeTargetMovedList(target: text, with: currentState.filteredList, to: 0)
+        
+        let newTextModel = SearchResultItemModel(title: text)
+        let currentSavedRecentList = makeTargetMovedList(target: newTextModel, with: currentState.recentList, to: 0)
+        let currentFilterList = makeTargetMovedList(target: newTextModel, with: currentState.filteredList, to: 0)
         UserDefaultsManager.recentSearchList = currentSavedRecentList
         
         return .merge(.just(.setFilteredList(currentFilterList)), .just(.setRecentList(currentSavedRecentList)))
@@ -90,12 +92,12 @@ extension MainSearchReactor {
     private func filterRecentListMutation(text: String?) -> Observable<Mutation> {
         let inputText = text ?? ""
         if inputText.isEmpty { return .just(.setFilteredList(currentState.recentList)) }
-        let filteredList = currentState.recentList.filter { $0.contains(inputText) }
+        let filteredList = currentState.recentList.filter { $0.title.contains(inputText) }
         
         return .just(.setFilteredList(filteredList))
     }
     
-    private func deleteRecentMutation(text: String?) -> Observable<Mutation> {
+    private func deleteRecentMutation(text: SearchResultItemModel?) -> Observable<Mutation> {
         guard let text = text else { return .empty() }
         let currentSavedRecentList = makeTargetRemovedList(target: text, with: currentState.recentList)
         let currentFilterList = makeTargetRemovedList(target: text, with: currentState.filteredList)
@@ -118,16 +120,16 @@ extension MainSearchReactor {
 }
 
 extension MainSearchReactor {
-    func makeTargetMovedList(target: String, with list: [String], to index: Int) -> [String] {
+    func makeTargetMovedList(target: SearchResultItemModel, with list: [SearchResultItemModel], to index: Int) -> [SearchResultItemModel] {
         var recentList = list
-        recentList.removeAll(where: { $0 == target })
+        recentList.removeAll(where: { $0.title == target.title })
         recentList.insert(target, at: index)
         return recentList
     }
     
-    func makeTargetRemovedList(target: String, with list: [String]) -> [String] {
+    func makeTargetRemovedList(target: SearchResultItemModel, with list: [SearchResultItemModel]) -> [SearchResultItemModel] {
         var recentList = currentState.filteredList
-        recentList.removeAll(where: { $0 == target })
+        recentList.removeAll(where: { $0.title == target.title })
         return recentList
     }
 }

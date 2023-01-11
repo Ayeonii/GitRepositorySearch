@@ -52,16 +52,16 @@ class MainSearchViewController: BaseViewController<MainSearchReactor> {
         reactor.pulse(\.$filteredList)
             .bind(to: resultVC.tableView.rx.items(cellIdentifier: SearchFilterTableViewCell.identifier, cellType: SearchFilterTableViewCell.self)) { index, item, cell in
                 
-                cell.titleLabel.text = item
+                cell.cellModel = item
                 
                 cell.coverView.rx.tapGesture()
                     .when(.recognized)
-                    .map { _ in MainSearchReactor.Action.goToResult(cell.titleLabel.text) }
+                    .map { _ in MainSearchReactor.Action.goToResult(cell.cellModel?.title) }
                     .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
                 
                 cell.deleteBtn.rx.tap
-                    .map { MainSearchReactor.Action.deleteRecent(cell.titleLabel.text) }
+                    .map { MainSearchReactor.Action.deleteRecent(cell.cellModel) }
                     .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
             }

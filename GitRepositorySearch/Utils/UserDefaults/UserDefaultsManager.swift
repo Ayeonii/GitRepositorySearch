@@ -9,7 +9,7 @@ import Foundation
 
 struct UserDefaultsManager {
     @UserDefaultsWrapper(key: "RecentSearchList", value: nil)
-    static var recentSearchList: [String]?
+    static var recentSearchList: [SearchResultItemModel]?
 }
 
 @propertyWrapper

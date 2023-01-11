@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct SearchResultItemModel {
+struct SearchResultItemModel: Codable {
     var title: String
 }
