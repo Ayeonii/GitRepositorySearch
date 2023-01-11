@@ -22,7 +22,7 @@ public class ImageCache {
     private init() { }
     
     private let cacheImages = NSCache<NSURL, UIImage>().then {
-        $0.totalCostLimit = 50
+        $0.totalCostLimit = 50 * 1024 * 1024
     }
     
     private final func image(url: NSURL) -> UIImage? {
